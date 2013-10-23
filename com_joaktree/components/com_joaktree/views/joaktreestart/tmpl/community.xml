@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE metadata>
+<metadata>
+	<layout title="Community">
+		<message>
+			<![CDATA[COM_JOAKTREE_INDEX_VIEW_DESC]]>
+		</message>
+	</layout>
+
+	<!-- Add fields to the parameters object for the layout. -->
+	<fields name="params">
+
+	</fields>
+</metadata>

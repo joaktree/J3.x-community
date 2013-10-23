@@ -1,0 +1,45 @@
+@CHARSET "ISO-8859-1";
+#upload {
+
+	border: 1px solid #ccc;
+	margin-top: 8px;
+	max-width: 340px;
+	min-height: 30px;
+}
+
+/*
+	cancel upload button
+*/
+.cancel-upload {
+
+	background:#ccc;
+	border: 1px solid #999999;
+	color: #000000;
+	display: inline-block;
+	margin: 5px 5px 0 3px;
+	padding: 2px 5px;
+}
+.cancel-upload:hover {
+
+	background: #aaa;
+	color: #fff;
+}
+
+/*
+	browse button style: currently supported only by Firexox 4+
+*/
+
+.browse-upload {
+
+	background:#ccc;
+	border: 1px solid #999999;
+	color: #000000;
+	display: inline-block;
+	margin: 5px 5px 0 0;
+	padding: 2px 5px;
+}
+.browse-upload:hover {
+
+	background: #aaa;
+	color: #fff;
+}

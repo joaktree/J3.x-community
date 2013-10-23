@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE form>
+<form>
+	<fieldset name="mygenealogy">
+		<field
+			name="user_id"
+			type="hidden"
+			filter="unset"
+		/>
+	
+		<field
+			name="tree_id"
+			type="hidden"
+			filter="unset"
+		/>
+
+		<field 
+			name="app_id" 
+			type="hidden"
+			filter="unset"
+		/>
+
+		<field
+			name="asset_id"
+			type="hidden"
+			filter="unset"
+		/>
+		
+		<field 
+			name="name" 
+			type="text"
+			size="100" 
+			label="JTTREE_LABEL_TREENAME"
+			description="JTTREE_LABEL_TREENAME"
+			required="true" 
+		/>
+			
+		<field
+			name="indGedCom"
+			type="list"
+			class="inputbox"
+			label="JTIMPORTGEDCOM_TITLE"
+			description="JTIMPORTGEDCOM_TITLE"
+			default="0"
+			onchange="if(this.value==1){$('gedcom').setStyle('display', 'block');}else{$('gedcom').setStyle('display', 'none');}"
+		>
+				<option	value="0">JNO</option>
+				<option value="1">JYES</option>
+		</field>	
+					
+		<field	name="path_file"
+				type="media"
+				class="inputbox"
+				size="100"
+				directory="joaktree"
+				hide_none="1" 
+				label="JT_LABEL_PICTURE" 	
+				description ="JT_DESC_PICTURE" 
+		/>
+		
+		<field
+			name="holds"
+			type="hidden"
+			class="inputbox"
+			label="JTTREE_LABEL_HOLDS"
+			description="JTTREE_TOOLTIP_HOLDS"
+			default="all"
+		/>
+
+		<field 
+			name="personName"
+			type="hidden" 
+			class="readonly"
+			size="50"
+			label="JTTREE_LABEL_ROOTPERSON"
+			description=""
+		/>
+
+		<field
+			name="access"
+			type="hidden"
+			default="1"
+			label="JT_HEADING_ACCESS"
+			description="JFIELD_ACCESS_DESC"
+			class="inputbox"
+		/>
+
+		<field 
+			name="root_person_id"
+			type="hidden" 
+			class="readonly"
+			size="50"
+			label="JTFAMTREE_HEADING_TREEHOLDERID"
+			description=""
+		/>
+
+		<field 
+			name="theme_id" 
+			type="sql"
+			class="inputbox"
+			label="JT_HEADING_THEME"
+			description="JTTHEME_DESC_THEMES"
+			key_field="value"
+			value_field="theme"
+			query="SELECT id AS value, name AS theme FROM #__joaktree_themes"
+		/>
+	
+		<field 
+			name="indGendex" 
+			type="hidden"
+			class="inputbox"
+			label="JTTREE_LABEL_GENDEX"
+			description="JTTREE_TOOLTIP_GENDEX"
+			default="1"
+		/>
+
+		<field 
+			name="indPersonCount" 
+			type="hidden"
+			class="inputbox"
+			label="JTTREE_LABEL_PERSONCOUNT"
+			description="JTTREE_TOOLTIP_PERSONCOUNT"
+			default="1"
+		/>
+
+		<field 
+			name="indMarriageCount" 
+			type="hidden"
+			class="inputbox"
+			label="JTTREE_LABEL_MARRIAGECOUNT"
+			description="JTTREE_TOOLTIP_MARRIAGECOUNT"
+			default="1"
+		/>
+		
+		<field name="robots"
+			type="hidden"
+			label="JFIELD_METADATA_ROBOTS_LABEL"
+			description="JFIELD_METADATA_ROBOTS_DESC"
+			default="0"
+		/>
+		
+		<field name="catid" 
+			type="hidden"
+			extension="com_content"
+			label="JCATEGORY" 
+			description="JFIELD_CATEGORY_DESC"
+			class="inputbox" 
+		/>
+		
+	</fieldset>
+
+	<fields name="params">
+		<fieldset name="gedcom">	
+			<field
+				id="gedcomfile_path"
+				name="gedcomfile_path"
+				type="hidden"
+				label="COM_JOAKTREE_GEDCOM_PATH_LABEL"
+				description="COM_JOAKTREE_GEDCOM_PATH_DESC"
+				default="tmp"
+				size="50"
+				class="inputbox"
+				required="true"
+			/>
+		
+			<field
+				id="gedcomfile_name"
+				name="gedcomfile_name"
+				type="hidden"
+				label="COM_JOAKTREE_GEDCOM_NAME_LABEL"
+				description="COM_JOAKTREE_GEDCOM_NAME_DESC"
+				default="joaktree.ged"
+				size="50"
+				class="inputbox"
+				required="true"
+			/>
+
+			<field
+				id="unicode2utf"
+				name="unicode2utf"
+				type="list"
+				label="COM_JOAKTREE_CONVERSION_LABEL"
+				description="COM_JOAKTREE_CONVERSION_DESC"
+				default="0"
+			>
+				<option	value="0">COM_JOAKTREE_CONVERSION_VALUE_0</option>
+				<option value="1">COM_JOAKTREE_CONVERSION_VALUE_1</option>
+			</field>
+
+			<field
+				id="familyname"
+				name="familyname"
+				type="hidden"
+				label="COM_JOAKTREE_FAMILYNAME_LABEL"
+				description="COM_JOAKTREE_FAMILYNAME_DESC"
+				default="0"
+			/>
+	
+			<field
+				id="patronym"
+				name="patronym"
+				type="hidden"
+				label="COM_JOAKTREE_PATRONYM_LABEL"
+				description="COM_JOAKTREE_PATRONYM_DESC"
+				default="0"
+			/>
+
+			<field
+				id="patronymSeparation"
+				name="patronymSeparation"
+				type="hidden"
+				label="COM_JOAKTREE_SEPARATION_LABEL"
+				description="COM_JOAKTREE_SEPARATION_DESC"
+				default="-"
+				size="4"
+				class="inputbox"
+			/>
+
+			<field
+				id="age_no_page"
+				name="age_no_page"
+				type="hidden"
+				label="COM_JOAKTREE_AGENOPAGE_LABEL"
+				description="COM_JOAKTREE_AGENOPAGE_DESC"
+				default="0"
+				size="2"
+				class="inputbox validate-numeric"
+			/>
+			
+			<field
+				id="removeChar"
+				name="removeChar"
+				type="hidden"
+				label="COM_JOAKTREE_REMOVECHAR_LABEL"
+				description="COM_JOAKTREE_REMOVECHAR_DESC"
+				default=""
+				size="1"
+				class="inputbox"
+			/>
+	
+			<field
+				id="truncrelations"
+				name="truncrelations"
+				type="hidden"
+				label="COM_JOAKTREE_TRUNCRELATIONS_LABEL"
+				description="COM_JOAKTREE_TRUNCRELATIONS_DESC"
+				default="1"
+			/>
+
+			<field
+				id="indDocuments"
+				name="indDocuments"
+				type="hidden"
+				label="COM_JOAKTREE_INDDOC_LABEL"
+				description="COM_JOAKTREE_INDDOC_DESC"
+				default="1"
+			/>
+	
+			<field
+				id="gedcomDocumentRoot"
+				name="gedcomDocumentRoot"
+				type="hidden"
+				label="COM_JOAKTREE_GEDCOMDOCROOT_LABEL"
+				description="COM_JOAKTREE_GEDCOMDOCROOT_DESC"
+				size="50"
+				class="inputbox"
+			/>
+	
+			<field
+				id="joomlaDocumentRoot"
+				name="joomlaDocumentRoot"
+				type="hidden"
+				label="COM_JOAKTREE_JOOMLADOCROOT_LABEL"
+				description="COM_JOAKTREE_JOOMLADOCROOT_DESC"
+				size="50"
+				class="inputbox"
+			/>			
+			
+			<field
+				id="colon"
+				name="colon"
+				type="hidden"
+				label="COM_JOAKTREE_COLON_LABEL"
+				description="COM_JOAKTREE_COLON_DESC"
+				default="0"
+			>
+				<option	value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+	
+			<field
+				id="indLogging"
+				name="indLogging"
+				type="hidden"
+				label="COM_JOAKTREE_INDLOG_LABEL"
+				description="COM_JOAKTREE_INDLOG_DESC"
+				default="0"
+			/>
+
+		</fieldset>
+	</fields>
+
+		
+</form>	
+	

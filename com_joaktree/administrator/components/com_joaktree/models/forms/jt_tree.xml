@@ -144,13 +144,20 @@
 		</field>
 		
 		<field name="catid" 
-			type="categoryedit"
+			type="categorycontent"
 			extension="com_content"
-			label="JCATEGORY" 
-			description="JFIELD_CATEGORY_DESC"
+			show_root="true"
+			label="JTTREE_LABEL_CATEGORY"
+			description="JTTREE_TOOLTIP_CATEGORY"
 			class="inputbox" 
-		>
-		</field>
+		/>
+		
+		<field name="kunenacatid" 
+			type="categorykunena"
+			label="JTTREE_LABEL_KUNENACATEGORY"
+			description="JTTREE_TOOLTIP_KUNENACATEGORY"
+			class="inputbox" 
+		/>
 		
 		<field
 			id="rules"

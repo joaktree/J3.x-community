@@ -70,11 +70,11 @@ class JoaktreeControllerJt_trees extends JoaktreeController {
 	}
 
 	public function delete() {
-		$cids	= $this->input->get( 'cid', null, 'array' );
+		$cids	= $this->input->get( 'cid', null, 'array' );	
 		$model = $this->getModel('jt_tree');
 		
 		$msg 	= $model->delete($cids);
-		
+			
 		$link = 'index.php?option=com_joaktree&view=jt_trees';
 		$this->setRedirect($link, $msg);
 	}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE form>
+<form>
+	<fieldset name="community">
+		<field 
+			name="name" 
+			type="text" 
+			class="inputbox readonly"
+			required="true"
+			size="50"
+			maxlength="250"
+			label="JT_LABEL_NAME" 	
+			description ="JT_DESC_NAME" 
+			readonly="true" 
+		/>
+
+		<field 
+			name="email" 
+			type="email" 
+			class="inputbox"
+			size="50"
+			maxlength="250"
+			label="JT_EMAIL" 	
+			description ="JT_EMAIL" 
+		/>
+		
+		<field 
+			name="subject" 
+			type="text" 
+			class="inputbox"
+			required="true"
+			size="50"
+			maxlength="250"
+			label="JT_LABEL_SUBJECT" 	
+			description ="JT_DESC_SUBJECT" 
+		/>
+
+		<field 
+			name="message" 
+			type="textarea" 
+			class="inputbox"
+			size="50"
+			maxlength="250"
+			label="JT_LABEL_NOTE" 	
+			description ="JT_DESC_NOTE" 
+		/>
+						
+		<field
+			name="captcha"
+			type="captcha"
+			label="JT_LABEL_CAPTCHA"
+			description="JT_DESC_CAPTCHA"
+			validate="captcha"
+		/>
+	</fieldset>
+			
+</form>	
+	

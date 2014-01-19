@@ -36,7 +36,7 @@ $sortFields = $this->getSortFields();
 	<?php  $divClassSpan = ''; ?>	
 <?php } ?>
 	<div id="j-main-container" class="<?php echo $divClassSpan; ?>">
-	
+
 		<!--  filter row -->
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
@@ -109,6 +109,11 @@ $sortFields = $this->getSortFields();
 					<th class="nowrap hidden-phone">
 						<?php echo JHtml::_('grid.sort', 'JTAPPS_HEADING_PERSONS', 'NumberOfPersons ', $this->lists['order_Dir'], $this->lists['order']); ?>
 					</th>
+					<?php if ($this->params->get('indCommunity', 0) == 2) { ?>
+						<th width="2%" class="nowrap center hidden-phone">
+							<?php echo JText::_( 'COM_JOAKTREE_COMMUNITY_LABEL' ); ?>
+						</th>
+					<?php } ?>
 					<th width="2%" class="nowrap center hidden-phone">
 						<?php echo JText::_( 'JT_HEADING_ID' ); ?>
 					</th>
@@ -117,7 +122,7 @@ $sortFields = $this->getSortFields();
 			</thead>
 			<tfoot>
 				<tr>
-					<td colspan="7">
+					<td colspan="<?php echo ($this->params->get('indCommunity', 0) == 2) ? 8: 7; ?>">
 						<?php echo $this->pagination->getListFooter(); ?>
 					</td>
 				</tr>
@@ -151,6 +156,11 @@ $sortFields = $this->getSortFields();
 						<td class="small hidden-phone">
 							<?php echo $this->escape($row->NumberOfPersons);?>
 						</td>
+						<?php if ($this->params->get('indCommunity', 0) == 2) { ?>
+							<td class="small hidden-phone">
+								<?php echo JHtml::_('jgrid.isdefault', $row->community, $i, '', !$row->community);?>
+							</td>
+						<?php } ?>
 						<td class="center small hidden-phone">
 							<?php echo $row->id; ?>
 						</td>

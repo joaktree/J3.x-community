@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE form>
+<form>
+	<fieldset name="details">	
+		<field 
+			name="id" 
+			type="hidden"
+			filter="unset"
+		/>
+
+		<field 
+			name="code" 
+			type="text" 
+			required="true"
+			label="JTSETTINGS_HEADING_FIELD" 	
+			description ="JTSETTINGS_HEADING_FIELD" 
+		/>
+		
+		<field 
+			name="level" 
+			type="hidden"
+			filter="unset"
+		/>
+		
+		<field 
+			name="explanation" 
+			type="textarea" 
+			label="JTSETTINGS_EXPLANATION" 	
+			description ="JTSETTINGS_EXPLANATION" 
+		/>
+		
+		<field 
+			name="published" 
+			type="list"
+			label="JT_HEADING_PUBLISHED" 	
+			default="1" 	
+		>
+			<option	value="0">JNO</option>
+			<option	value="1">JYES</option>
+		</field>
+		
+		<field 
+			name="access" 
+			type="accesslevel"
+			label="JT_HEADING_ACCESS" 	 	
+		/>
+		<field name="access_level" type="hidden" />
+		
+		<field 
+			name="accessLiving" 
+			type="AccessLevelLiving"
+			label="JTSETTINGS_HEADING_ACCESS_LIVPERSON" 	
+		/>
+		<field name="access_level_living" type="hidden" />
+
+		<field 
+			name="altLiving" 
+			type="AccessLevelLiving"
+			label="JTSETTINGS_HEADING_ALT_LIVPERSON" 	
+		/>
+		<field name="access_level_alttext" type="hidden" />
+			
+		<field 
+			name="domain" 
+			type="list"
+			label="JTSETTINGS_DOMAIN"
+			default="0" 	
+		>
+			<option	value="0">JNO</option>
+			<option	value="1">JYES</option>
+		</field>
+		
+	</fieldset>
+</form>

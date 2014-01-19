@@ -22,7 +22,8 @@ class TableJoaktree_users extends JTable
 	var $app_id				= null;
 	var $tree_id			= null;
 	var $usergroup1_id		= null;
-	//var $usergroup2_id		= null;
+	var $papp_id			= null;
+	var $person_id			= null;
 	var $params				= null;
 	
 	function __construct( &$db) {

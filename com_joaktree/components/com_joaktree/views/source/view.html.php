@@ -41,7 +41,7 @@ class JoaktreeViewSource extends JViewLegacy {
 			$this->params->merge(JoaktreeHelper::getTheme(true, true));
 			
 			if ($this->params->get('siteedit', 1)) {	
-				$this->canDo	= JoaktreeHelper::getActions(false);	
+				$this->canDo	= JoaktreeHelper::getActions('application');	
 			} else {
 				$this->canDo	= null;
 			}

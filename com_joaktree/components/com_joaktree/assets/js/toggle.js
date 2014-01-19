@@ -68,22 +68,6 @@ function jttmya_toggle(id) {
 }
 
 ////////////////////////
-// toggle visibility of an array of elements depending on a classname or style
-//
-function jtedit(value, cl1, cl2) {
-	var oEl, i, elements;
-	elements = document.getElementById('jt-content').getElements(value); 
-	for (i=0; i < elements.length; i++ ) {
-		if($jt(elements[i])){
-			oEl = $jt(elements[i]);
-			if(isClassInElement(oEl, cl1)) 
-				swapClassInElement(oEl,cl1,cl2);
-		}
-	}
-	return false;
-}
-
-////////////////////////
 //toggle visibility of an array of elements depending on a classname or style
 //
 function jttogform(value, cl1, cl2) {

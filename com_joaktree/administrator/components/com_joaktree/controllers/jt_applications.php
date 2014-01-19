@@ -109,6 +109,15 @@ class JoaktreeControllerJt_applications extends JoaktreeController {
 		$this->setRedirect($link, $msg);
 	}
 		
+	public function setDefault() {
+		$model	= $this->getModel('jt_applications');
+		
+		$msg	= $model->setDefault();
+		
+		$link	= 'index.php?option=com_joaktree&view=jt_applications';
+		$this->setRedirect($link, $msg);
+	}
+	
 	public function import() {
 //		$params = JComponentHelper::getParams('com_joaktree') ;
 //		$procStep = $params->get('processStep', 1);

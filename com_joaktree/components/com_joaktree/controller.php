@@ -29,7 +29,7 @@ class JoaktreeController extends JControllerLegacy {
 		// Make sure we have a default view
 		// create an input object
 		$input = JFactory::getApplication()->input;
-
+		
 		if($input->get('view') == '') {
 			$input->set('view', 'default');
 		}	

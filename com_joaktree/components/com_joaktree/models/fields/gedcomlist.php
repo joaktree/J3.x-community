@@ -43,6 +43,7 @@ class JFormFieldGedcomList extends JFormFieldList
 		$html = array();
 		$attr = '';
 		$gedcomtype = $this->element['gedcom'];
+		$domain     = (isset($this->element['domain']) && ($this->element['domain'] == 'true')) ? 'true' : 'false';
 		$indLiving = $this->form->getValue('living', 'person');
 		if (!isset($indLiving)) { $indLiving = 1; }
 
@@ -60,7 +61,7 @@ class JFormFieldGedcomList extends JFormFieldList
 		$attr .= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'"' : '';
 
 		// Get the field options.
-		$options = (array) $this->getOptions($gedcomtype, $indLiving);
+		$options = (array) $this->getOptions($gedcomtype, $indLiving, $domain);
 
 		// Create a read-only list (no name) with a hidden input to store the value.
 		if ((string) $this->element['readonly'] == 'true') {
@@ -81,7 +82,7 @@ class JFormFieldGedcomList extends JFormFieldList
 	 * @return  array  The field option objects.
 	 * @since   11.1
 	 */
-	protected function getOptions($gedcomtype, $indLiving)
+	protected function getOptions($gedcomtype, $indLiving, $domain)
 	{
 		// Possible gedcom-types are: person, name, relation
 		
@@ -96,6 +97,14 @@ class JFormFieldGedcomList extends JFormFieldList
 		$query->from(  ' #__joaktree_display_settings ');
 		$query->where( ' level = '.$db->quote($gedcomtype).' ');
 		$query->where( ' published = true ');
+		if ($gedcomtype == 'person') {
+			$query->where( ' domain = '.$domain.' ');
+			
+			if ($domain == 'true') {
+				$dispId = JoaktreeHelper::getDispId(); 
+				$query->where( ' id = '.(int) $dispId.' ');
+			}
+		}
 		$query->where( ' code NOT IN ('
 							.$db->quote('NAME').', '
 							.$db->quote('NOTE').', '
@@ -108,6 +117,9 @@ class JFormFieldGedcomList extends JFormFieldList
 		} else {
 			$query->where( ' access IN '.$levels.' ');
 		}
+		
+		// order
+		$query->order(' ordering ');
 		
 		// Set the query and get the result list.
 		$db->setQuery($query);

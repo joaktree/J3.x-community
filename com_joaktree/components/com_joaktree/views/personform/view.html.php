@@ -36,7 +36,7 @@ class JoaktreeViewPersonform extends JViewLegacy {
 	{	
 		// First load the treeId!
 		$this->lists['treeId']		= $this->get( 'treeId' );
-		
+
 		// Load the parameters.
 		$this->params	= JoaktreeHelper::getJTParams(true);
 		if ($this->params->get('siteedit', 1)) {	

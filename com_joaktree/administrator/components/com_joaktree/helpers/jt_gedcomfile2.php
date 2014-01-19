@@ -759,6 +759,7 @@ class jt_gedcomfile2 {
 		$deleteTable[] = '#__joaktree_persons';
 		$deleteTable[] = '#__joaktree_person_documents';
 		$deleteTable[] = '#__joaktree_person_events';
+		$deleteTable[] = '#__joaktree_person_links';
 		$deleteTable[] = '#__joaktree_person_names';
 		$deleteTable[] = '#__joaktree_person_notes';
 		$deleteTable[] = '#__joaktree_relations';

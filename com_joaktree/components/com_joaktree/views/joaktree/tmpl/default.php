@@ -9,10 +9,88 @@ JHtml::_('behavior.framework', true);
 JLoader::import('helper.formhelper', JPATH_COMPONENT);
 ?>
 
-<script>
+<script type="text/javascript">
 window.addEvent('domready', function() {
-    set_jtTabs();
+	if ($('jt1tabid') != null) {
+		var move = $('jt-tabbar').offsetHeight - $('jt1tabid').offsetHeight - 6;
+		$('jt1tabid').style.top =  move + 'px';
+		if ($('jt2tabid') != null) $('jt2tabid').style.top =  move + 'px';
+		if ($('jt3tabid') != null) $('jt3tabid').style.top =  move + 'px';
+		if ($('jt4tabid') != null) $('jt4tabid').style.top =  move + 'px';
+		if ($('jt5tabid') != null) $('jt5tabid').style.top =  move + 'px';
+		if ($('jt6tabid') != null) $('jt6tabid').style.top =  move + 'px';
+	}
 });
+
+function toggleTabs(action, url) {
+	setTimeout( function(){
+			// make all tabs and pages inactive
+			var Tabs = $('jt-content').getElements('a');
+			Tabs.each(function(item){
+				if (item.hasClass('jt-tab-active')) {
+					item.toggleClass('jt-tab-active');
+					item.toggleClass('jt-tab-inactive');
+					item.toggleClass('jt-tablabel-active');
+					item.toggleClass('jt-tablabel-inactive');
+				}
+				if (item.hasClass('jt-tab-editactive')) {
+					item.toggleClass('jt-tab-editactive');
+					item.toggleClass('jt-tab-edit');
+					item.toggleClass('jt-tablabel-active');
+					item.toggleClass('jt-tablabel-inactive');
+				}
+			}, this);
+			var Pags = $('jt-content').getElements('div');
+			Pags.each(function(item){
+				if (item.hasClass('jt-show-block')) {
+					item.toggleClass('jt-show-block');
+					item.toggleClass('jt-hide');
+				}
+			}, this);
+			// make selected tab and page active
+			var tabId = 'jt'+action+'tabid', pagId;
+			if (action == 5) {
+				// edit
+				pagId = 'jt1tabpageid';
+				Pags.each(function(item){
+					if (item.hasClass('jt-edit-2')) {
+						item.toggleClass('jt-edit-1');
+						item.toggleClass('jt-edit-2');
+					}
+				}, this); 
+				$(tabId).toggleClass('jt-tab-editactive');
+				$(tabId).toggleClass('jt-tab-edit');
+			} else {
+				// no edit 
+				pagId = 'jt'+action+'tabpageid';
+				Pags.each(function(item){
+					if (item.hasClass('jt-edit-1')) {
+						item.toggleClass('jt-edit-1');
+						item.toggleClass('jt-edit-2');
+					}
+				}, this); 
+				$(tabId).toggleClass('jt-tab-active');
+				$(tabId).toggleClass('jt-tab-inactive');
+			}
+			$(tabId).toggleClass('jt-tablabel-active');
+			$(tabId).toggleClass('jt-tablabel-inactive');
+
+			if ($(pagId).hasClass('jt-ajax')) {
+				$(pagId).toggleClass('jt-ajax');
+				MakeRequest(pagId,url);
+			} else {
+				$(pagId).toggleClass('jt-hide');						
+			}
+			$(pagId).toggleClass('jt-show-block');
+	    }
+	  ,150
+	  );
+	  return false;
+}
+
+function HandleResponse(id,response) {
+	$(id).innerHTML = response;
+}
 </script>
 
 <?php // script for domready
@@ -28,7 +106,7 @@ window.addEvent('domready', function() {
    		$script = array();
 		$script[] = '<script>';
 		$script[] = 'window.addEvent(\'domready\', function() {';
-		$script[] = 'toggleAjaxTabs(5, \'0\'); return false;';
+		$script[] = 'toggleTabs(5, \'0\'); return false;';
 		$script[] = '});';			
 		$script[] = '</script>';
 		echo implode("\n", $script);
@@ -44,6 +122,11 @@ window.addEvent('domready', function() {
 	    fadeDuration:   <?php echo $this->lists['transDelay']; ?>
 	});	
 </script>
+
+<!-- Extra css for community -->
+<style type="text/css">
+	.jt-tab-inactive {width: auto; min-width: 16px; }
+</style>
 
 <?php if ( (is_object($this->canDo)) && (  $this->canDo->get('core.create')
 										|| $this->canDo->get('media.create')
@@ -104,6 +187,7 @@ window.addEvent('domready', function() {
 		   ||( ($this->person->indHasChild == true) && ($this->lists['showDescendants'] == 1) )
 		   ||(  $this->person->indNote == true )
 		   ||(  $this->lists['numberArticles'] > 0 )
+		   ||( ($this->lists['discussion'] == true) || ($this->lists['community'] == true) ) 
 		   ||( (is_object($this->canDo)) && 
 					(  $this->canDo->get('core.create')
 					|| $this->canDo->get('media.create')
@@ -119,10 +203,11 @@ window.addEvent('domready', function() {
 		   	
 		   	$link = '';
 		   	$html .= '<a href="#" id="jt1tabid" ';
-	   		$html .= 'class="jt-tab-active jt-tablabel-active" ';		   	
+			$html .= 'title="'.JText::_('JT_SHOW').' '.JText::_('JT_DETAILS').'" ';
+		   	$html .= 'class="jt-tab-active jt-tablabel-active" ';		   	
 		   	$html .= 'style="position: relative;" ';
-			$html .= $this->lists[ 'action' ].'="toggleAjaxTabs(1, \''.$link.'\'); return false;">';
-		   	$html .= JText::_('JT_DETAILS');
+			$html .= $this->lists[ 'action' ].'="toggleTabs(1, \''.$link.'\'); return false;">';
+		   	$html .= '<span class="jt-person">&nbsp;</span>'; //JText::_('JT_DETAILS');
 		   	$html .= '</a>';
 		   	
 			if (($this->person->indNote == true) || (  $this->lists['numberArticles'] > 0 ))  {
@@ -136,8 +221,8 @@ window.addEvent('domready', function() {
 			
 				$html .= '<a href="#" id="jt2tabid" class="jt-tab-inactive jt-tablabel-inactive" style="position: relative;" ';
 				$html .= 'title="'.JText::_('JT_SHOW').' '.JText::_('JT_INFORMATION').'" ';
-				$html .= $this->lists[ 'action' ].'="toggleAjaxTabs(2, \''.$link.'\'); return false;" >';
-				$html .= JText::_('JT_INFORMATION');
+				$html .= $this->lists[ 'action' ].'="toggleTabs(2, \''.$link.'\'); return false;" >';
+				$html .= '<span class="jt-information">&nbsp;</span>';
 				$html .= '</a>';
 			}
 			
@@ -152,8 +237,8 @@ window.addEvent('domready', function() {
 						
 				$html .= '<a href="#" id="jt3tabid" class="jt-tab-inactive jt-tablabel-inactive" style="position: relative;" ';
 				$html .= 'title="'.JText::_('JT_SHOW').' '.JText::_('JT_ANCESTORS').'" ';
-				$html .= $this->lists[ 'action' ].'="toggleAjaxTabs(3, \''.$link.'\'); return false;" >';
-				$html .= JText::_('JT_ANCESTORS');
+				$html .= $this->lists[ 'action' ].'="toggleTabs(3, \''.$link.'\'); return false;" >';
+				$html .= '<span class="jt-ancestors">&nbsp;</span>';
 				$html .= '</a>';
 			}
 			
@@ -168,12 +253,32 @@ window.addEvent('domready', function() {
 						
 				$html .= '<a href="#" id="jt4tabid" class="jt-tab-inactive jt-tablabel-inactive" style="position: relative;" ';
 				$html .= 'title="'.JText::_('JT_SHOW').' '.JText::_('JT_DESCENDANTS').'" ';
-				$html .= $this->lists[ 'action' ].'="toggleAjaxTabs(4, \''.$link.'\'); return false;" >';
-				$html .= JText::_('JT_DESCENDANTS');
+				$html .= $this->lists[ 'action' ].'="toggleTabs(4, \''.$link.'\'); return false;" >';
+				$html .= '<span class="jt-descendants">&nbsp;</span>';
 				$html .= '</a>';
 					
 			}
-							
+			
+			if (($this->lists['discussion'] == true) || ($this->lists['community'] == true)) {
+				// Community tab
+			   	$html .= '<span class="jt-tabline">&nbsp;</span>';	
+			   	$link = Jroute::_('index.php?option=com_joaktree'
+							.'&view=community'
+							.'&format=raw'
+							.'&tmpl=component'
+							.'&personId='.$this->person->app_id.'!'.$this->person->id
+							.'&treeId='.$this->person->tree_id
+							.'&technology='.$this->lists['technology']
+							);
+			   	$html .= '<a href="#" id="jt6tabid" ';
+				$html .= 'title="'.JText::sprintf('JT_DISCUSS', $this->person->firstName.'&nbsp;'.$this->person->familyName).'" ';
+			   	$html .= 'class="jt-tab-inactive jt-tablabel-inactive" ';		   	
+			   	$html .= 'style="position: relative;" ';
+				$html .= $this->lists[ 'action' ].'="toggleTabs(6, \''.$link.'\'); return false;">';
+			   	$html .= '<span class="jt-discuss">&nbsp;</span>'; 
+			   	$html .= '</a>';
+			}
+						
 			if ( (is_object($this->canDo)) && 
 					(  $this->canDo->get('core.create')
 					|| $this->canDo->get('media.create')
@@ -189,7 +294,7 @@ window.addEvent('domready', function() {
 			   	$html .= 'style="position: relative;" ';
 
 				$html .= 'title="'.JText::_('JACTION_EDIT').'" ';
-				$html .= $this->lists[ 'action' ].'="toggleAjaxTabs(5, \''.$link.'\'); return false;" >';
+				$html .= $this->lists[ 'action' ].'="toggleTabs(5, \''.$link.'\'); return false;" >';
 				$html .= JText::_('JACTION_EDIT');
 				$html .= '</a>';	
 				
@@ -295,6 +400,37 @@ window.addEvent('domready', function() {
 		<div id="jt4tabpageid" class="jt-ajax">
 			<div class="jt-ajax-loader"><?php  echo JText::_('JT_LOADING').'&nbsp;'.JText::_('JT_DESCENDANTS'); ?></div>
 		</div>
+		<?php if ($this->lists['discussion'] == true) { ?>
+			<?php $link = 'index.php?option=com_joaktree'
+						 .'&view=community'
+						 .'&format=raw'
+						 .'&tmpl=component'
+						 .'&action=save'
+						 .'&kdiscussContentId='.$this->person->app_id.'!'.$this->person->id
+						 .'&tkn='.JSession::getFormToken()
+						 .'&personId='.$this->person->app_id.'!'.$this->person->id
+						 .'&treeId='.$this->person->tree_id
+						 .'&technology='.$this->lists['technology'];
+			?>
+			<input 
+				type="hidden" 
+				id="urlid" 
+				name="urlid" 
+				value="<?php echo JRoute::_($link); ?>" 
+			/>
+			<script type="text/javascript">
+				function postMessage1() {
+					var subj = $('jform_subject').value;
+					var comm = $('jform_message').value;
+					var url  = $('urlid').value + '&amp;subject=' + subj + '&amp;comment=' + comm;
+					MakeRequest('jt6tabpageid',url);
+					return false;
+				}
+			</script>			
+		<?php } ?>
+		<div id="jt6tabpageid" class="jt-ajax">
+			<div class="jt-ajax-loader"><?php  echo JText::_('JT_LOADING'); ?></div>
+		</div>
 	<?php 
 	}
 	?>
@@ -304,6 +440,7 @@ window.addEvent('domready', function() {
 	<input type="hidden" name="treeId" value="<?php echo $this->person->tree_id; ?>" />
 	<input type="hidden" name="tech" value="<?php echo $this->lists['technology']; ?>" />
 	<input type="hidden" name="object" value="" />
+	<input type="hidden" name="domainevent" value="" />
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="controller" value="personform" />
 	<?php echo JHtml::_('form.token'); ?>	

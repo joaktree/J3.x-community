@@ -81,6 +81,51 @@
 	</fieldset>
 	
 	<fieldset
+		name="community"
+		label="COM_JOAKTREE_COMMUNITY_LABEL"
+		description="COM_JOAKTREE_COMMUNITY_DESC"
+		>
+			<field
+				id="indCommunity"
+				name="indCommunity"
+				type="list"
+				label="COM_JOAKTREE_INDCOMMUNITY_LABEL"
+				description="COM_JOAKTREE_INDCOMMUNITY_DESC"
+				default="0"
+			>
+				<option	value="0">JNO</option>
+				<option	value="1">COM_JOAKTREE_INDCOMMUNITY_PRIVATE</option>
+				<option	value="2">COM_JOAKTREE_INDCOMMUNITY_COMMUNAL</option>
+			</field>
+
+			<field
+				id="indDiscussion"
+				name="indDiscussion"
+				type="list"
+				label="COM_JOAKTREE_INDDISCUSSION_LABEL"
+				description="COM_JOAKTREE_INDDISCUSSION_DESC"
+				default="0"
+			>
+				<option	value="0">JNO</option>
+				<option	value="1">JYES</option>
+			</field>
+
+			<field
+				name="captcha"
+				type="plugins"
+				folder="captcha"
+				default=""
+				label="COM_JOAKTREE_CAPTCHA_LABEL"
+				description="COM_JOAKTREE_CAPTCHA_DESC"
+				filter="cmd" >
+				<option
+					value="">JOPTION_USE_DEFAULT</option>
+				<option
+					value="0">JOPTION_DO_NOT_USE</option>
+			</field>
+	</fieldset>
+	
+	<fieldset
 		name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"
 		description="JCONFIG_PERMISSIONS_DESC"

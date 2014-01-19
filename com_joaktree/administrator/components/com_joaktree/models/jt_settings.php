@@ -279,42 +279,41 @@ class JoaktreeModelJt_settings extends JModelList {
 		return $return;
 	}
 	
-//	public function store($data, $code) {
-//		$canDo	= JoaktreeHelper::getActions();
-//		
-//		if ($canDo->get('core.edit')) {
-//			// initialize tables and records
-//			$row   	= & JTable::getInstance('joaktree_display_settings', 'Table');
-//						
-//			// Bind the form fields to the table
-//			$row->id             = $data['id'];
-//			$row->access		 = $data['access'];
-//			$row->accessLiving   = $data['accessLiving'];
-//			$row->altLiving      = $data['altLiving'];
-//			
-//			if (!$row->bind($data)) {
-//				$this->setError($this->_db->getErrorMsg());
-//				return false;
-//			}
-//			
-//			// Make sure the table is valid
-//			if (!$row->check()) {
-//				$this->setError($this->_db->getErrorMsg());
-//				return false;
-//			}
-//			
-//			// Store the table to the database
-//			if (!$row->store()) {
-//				$this->setError($this->_db->getErrorMsg());
-//				return false;
-//			}
-//			
-//			$return = $code;
-//		} else {
-//			$return = JText::_('JT_NOTAUTHORISED');
-//		}
-//		
-//		return $return;
-//	}
+	public function setDefault() {
+		$canDo	= JoaktreeHelper::getActions();
+		
+		if ($canDo->get('core.edit.state')) {
+			// get the input object
+			$input 	= JFactory::getApplication()->input;
+			$cids	= $input->get('cid', array(), 'array');
+			$id		= (int) $cids[0];
+			
+			// set id to default
+			$query = $this->_db->getQuery(true);
+			$query->update(' #__joaktree_display_settings ');
+			$query->set(   ' secondary = 1 ');
+			$query->where( ' id   = '.$id.' ');
+			
+			$this->_db->setQuery($query);
+			$ret = $this->_db->query();
+			
+			if ($ret) {
+				// set other record not to default
+				$query->clear();
+				$query->update(' #__joaktree_display_settings ');
+				$query->set(   ' secondary = 0 ');
+				$query->where( ' id   <> '.$id.' ');
+				
+				$this->_db->setQuery($query);
+				$ret = $this->_db->query();
+			}
+			
+			if ($ret) {
+				return '';
+			}
+		} else {
+			return JText::_('JT_NOTAUTHORISED');
+		}
+	}
 }
 ?>

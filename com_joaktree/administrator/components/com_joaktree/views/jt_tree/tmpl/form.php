@@ -135,6 +135,16 @@ $clrPerson  = 'window.parent.jClearPerson();';
 						<?php echo $this->form->getInput('catid'); ?>
 					</div>
 				</div>
+				<?php if ($this->indDiscuss) { ?>
+					<div class="control-group">
+						<div class="control-label">
+							<?php echo $this->form->getLabel('kunenacatid'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('kunenacatid'); ?>
+						</div>
+					</div>
+				<?php } ?>
 				<div class="control-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('indGendex'); ?>

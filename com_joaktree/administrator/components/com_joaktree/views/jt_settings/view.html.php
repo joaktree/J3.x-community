@@ -76,10 +76,27 @@ class JoaktreeViewJt_settings extends JViewLegacy {
 			JToolBarHelper::title(   '&nbsp;&nbsp;' .JText::_( 'JTSETTINGS_TITLE_PERSONEVENTS' ), 'display1' );
 		}
 		
+		
+		if ($canDo->get('core.create')) {
+			JToolBarHelper::addNew('add_'.$this->layout);
+		}
+		
 		if ($canDo->get('core.edit')) {
-		//	JToolBarHelper::save('save', JText::_( 'JTSETTINGS_HEADING_SAVE' ), 'title');
+			JToolBarHelper::editList('edit_'.$this->layout);
+			if ($this->layout == 'personevent' ) {
+				JToolBarHelper::editList('view_domains', JTEXT::_('JTSETTINGS_DOMAIN'));
+			}
+		}
+
+		if ($canDo->get('core.delete')) {
+			JToolBarHelper::deleteList('JT_CONFIRMDELETE');
+		}
+		JToolBarHelper::divider();
+		
+		if ($canDo->get('core.edit')) {
 			JToolBarHelper::save('save', JText::_( 'JTSETTINGS_HEADING_SAVE' ), 'title');
 		}
+		JToolBarHelper::divider();
 		
 		if ($layout == 'personevent' ) {
 			JToolBarHelper::help('JoaktreeManuel', true, 'http://joaktree.com/index.php/en/joaktree/manual');		

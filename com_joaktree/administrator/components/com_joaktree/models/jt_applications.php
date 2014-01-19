@@ -86,6 +86,7 @@ class JoaktreeModelJt_applications extends JModelList {
 		$query->select(' japp.title ');
 		$query->select(' japp.description ');
 		$query->select(' japp.programName ');
+		$query->select(' japp.community ');
 		$query->from(  ' #__joaktree_applications  japp ');
 		
 		$query->select(' COUNT(jpn.id) AS NumberOfPersons ');
@@ -102,6 +103,7 @@ class JoaktreeModelJt_applications extends JModelList {
 		$query->group(' japp.title ');
 		$query->group(' japp.description ');
 		$query->group(' japp.programName ');
+		$query->group(' japp.community ');
 		$query->order(' '.$this->_buildContentOrderBy().' ');
 		
 		return $query;			
@@ -350,5 +352,42 @@ class JoaktreeModelJt_applications extends JModelList {
 		$this->_db->setQuery( $query );
 		$this->_db->query();			
 	}
+	
+	public function setDefault() {
+		$canDo	= JoaktreeHelper::getActions();
+		
+		if ($canDo->get('core.edit.state')) {
+			// get the input object
+			$cids	= JFactory::getApplication()->input->get('cid', array(), 'array');
+			$id		= (int) array_shift($cids);
+			
+			// set id to default
+			$query = $this->_db->getQuery(true);
+			$query->update(' #__joaktree_applications ');
+			$query->set(   ' community = 1 ');
+			$query->where( ' id   = '.$id.' ');
+			
+			$this->_db->setQuery($query);
+			$ret = $this->_db->query();
+			
+			if ($ret) {
+				// set other record not to default
+				$query->clear();
+				$query->update(' #__joaktree_applications ');
+				$query->set(   ' community = 0 ');
+				$query->where( ' id   <> '.$id.' ');
+				
+				$this->_db->setQuery($query);
+				$ret = $this->_db->query();
+			}
+			
+			if ($ret) {
+				return '';
+			}
+		} else {
+			return JText::_('JT_NOTAUTHORISED');
+		}
+	}
+	
 }
 ?>

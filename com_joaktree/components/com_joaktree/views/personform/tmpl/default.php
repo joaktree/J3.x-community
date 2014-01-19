@@ -305,19 +305,22 @@ JLoader::import('helper.formhelper', JPATH_COMPONENT);
 					<!-- List of existing events -->
 					<?php 
 					if (is_object($this->item)) {
-			  			$events = $this->item->getPersonEvents();
+			  			$events = $this->item->getPersonEvents();			  			
 			  			if (count($events)) {
 							$k = 4;
 							for ($i=0, $n=count($events); $i < $n; $i++)	{
-								$event 	= &$events[$i];						 	
+								$event 	= &$events[$i];
 								$evtCnt = ($event->orderNumber > $evtCnt) ? $event->orderNumber : $evtCnt;
+								if (!$event->domain) {						 	
+									
 					?>
-								<!-- Row for one existing event -->
-								<?php echo FormHelper::getNameEventRow(true, 'personEvent', $this->form, $this->item, $event, $this->lists['appId'], null) ;?>							
-								<!-- End: Row for one existing event -->
+									<!-- Row for one existing event -->
+									<?php echo FormHelper::getNameEventRow(true, 'personEvent', $this->form, $this->item, $event, $this->lists['appId'], null) ;?>							
+									<!-- End: Row for one existing event -->
 															
 					<?php   
-								$k = 7 - $k;			
+									$k = 7 - $k;
+								}			
 			  				}
 			  			}
 					}

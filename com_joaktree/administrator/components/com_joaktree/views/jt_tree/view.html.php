@@ -50,6 +50,7 @@ class JoaktreeViewJt_tree extends JViewLegacy {
 		// use cookies
 		$params  			= JComponentHelper::getParams('com_joaktree') ;
 		$this->indCookie	= $params->get('indCookies', true);
+		$this->indDiscuss	= $params->get('indDiscussion', false);
 		
 		$this->canDo	= JoaktreeHelper::getActions();
 		$this->addToolbar();

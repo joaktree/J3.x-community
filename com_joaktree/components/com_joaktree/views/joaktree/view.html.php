@@ -31,7 +31,6 @@ class JoaktreeViewJoaktree extends JViewLegacy {
 		$model			= $this->getModel();
 		
 		$this->params	= JoaktreeHelper::getJTParams();
-
 			
 		$document		= &JFactory::getDocument();
 
@@ -47,7 +46,8 @@ class JoaktreeViewJoaktree extends JViewLegacy {
 		// set up style sheets and javascript files
 		JHTML::stylesheet( JoaktreeHelper::joaktreecss() );
 		JHTML::stylesheet( JoaktreeHelper::joaktreecss($this->params->get('theme')) );
-					
+		JHTML::stylesheet( "/components/com_joaktree/views/community/tmpl/topic/discuss.css" );
+		
 		// Set up shadowbox
 		JHTML::stylesheet( JoaktreeHelper::shadowboxcss() );
 		$document->addScript( JoaktreeHelper::shadowboxjs() );
@@ -68,15 +68,19 @@ class JoaktreeViewJoaktree extends JViewLegacy {
 			$document->addScript( JoaktreeHelper::joaktreejs('jtajax.js'));
 		}		
 		
-		// Access
-		$lists['userAccess'] 	= $this->get( 'access' );
-		$lists['technology'] 	= $technology;
-		$edit					= $this->get( 'action' );
-		$lists['edit'] 			= ($edit == 'edit') ? true : false;
-		
 		// Person 
 		$this->person			= $this->get( 'person' );
 		$model->setCookie();
+		
+		// Access
+		$lists['userAccess'] 	= $this->get( 'access' );
+		$lists['technology'] 	= $technology;
+		$lists['edit'] 			= ($this->get( 'action' ) == 'edit') ? true : false;
+		$lists['save'] 			= ($this->get( 'action' ) == 'save') ? true : false;
+		$lists['discussion']	= ($this->params->get('indDiscussion', 0) && ((int)$this->person->kunenacatid > 0));
+		$lists['community']		= (($this->params->get('indCommunity', 0)>0) && JFactory::getUser()->id) 
+									? true 
+									: false;
 
 		$Html[ 'lineage' ]	= $this->showLineage();			
 		$lists['showAncestors']   = (int) $this->params->get('ancestorchart', 0);

@@ -37,88 +37,56 @@ function JoaktreeBuildRoute( &$query ) {
 		$view = $query['view'];
 		unset($query['view']);
 		
-		if (isset($query['appId'])) {
-			$appId = $query['appId'];
-			unset($query['appId']);
-		} else {
-			$appId = 0;
-		}
+		if (isset($query['appId'])) {	$appId = $query['appId'];
+										unset($query['appId']);
+		} else {						$appId = 0; }
 		
-		if (isset($query['treeId'])) {
-			$treeId = $query['treeId'];
-			unset($query['treeId']);
-		} else {
-			$treeId = 0;
-		}
+		if (isset($query['treeId'])) {	$treeId = $query['treeId'];
+										unset($query['treeId']);
+		} else {						$treeId = 0; }
 				
-		if (isset($query['sourceId'])) {
-			$sourceId = $query['sourceId'];
-			unset($query['sourceId']);
-		} else {
-			$sourceId = 0;
-		}
+		if (isset($query['sourceId'])) {$sourceId = $query['sourceId'];
+										unset($query['sourceId']);
+		} else {						$sourceId = 0; }
 		
-		if (isset($query['repoId'])) {
-			$repoId = $query['repoId'];
-			unset($query['repoId']);
-		} else {
-			$repoId = 0;
-		}
+		if (isset($query['repoId'])) {	$repoId = $query['repoId'];
+										unset($query['repoId']);
+		} else {						$repoId = 0; }
 		
-		if (isset($query['mapId'])) {
-			$mapId = $query['mapId'];
-			unset($query['mapId']);
-		} else {
-			$mapId = 0;
-		}
+		if (isset($query['mapId'])) {	$mapId = $query['mapId'];
+										unset($query['mapId']);
+		} else {						$mapId = 0; }
 		
-		if (isset($query['locId'])) {
-			$locId = $query['locId'];
-			unset($query['locId']);
-		} else {
-			$locId = 0;
-		}
+		if (isset($query['locId'])) {	$locId = $query['locId'];
+										unset($query['locId']);
+		} else {						$locId = 0; }
 		
-		if (isset($query['distance'])) {
-			$distance = $query['distance'];
-			unset($query['distance']);
-		}
+		if (isset($query['dispId'])) {	$dispId = $query['dispId'];
+										unset($query['dispId']);
+		} else {						$dispId = 0; }
 		
-		if (isset($query['tech'])) {
-			$tech = $query['tech'];
-			unset($query['tech']);
-		} else {
-			// default is AJAX for joaktree view
-			$tech = 'a';
-		}
+		if (isset($query['distance'])) {$distance = $query['distance'];
+										unset($query['distance']); }
+		
+		if (isset($query['tech'])) {	$tech = $query['tech'];
+										unset($query['tech']);
+		} else {						$tech = 'a'; }
 				
-		if (isset($query['action'])) {
-			$action = $query['action'];
-			unset($query['action']);
-		} else {
-			$action = 0;
-		}
+		if (isset($query['action'])) {	$action = $query['action'];
+										unset($query['action']);
+		} else {						$action = 0; }
 			
-		if (isset($query['filter'])) {
-			$filter = $query['filter'];
-			unset($query['filter']);
-		} else {
-			$filter = 0;
-		}
+		if (isset($query['filter'])) {	$filter = $query['filter'];
+										unset($query['filter']);
+		} else {						$filter = 0; }
 			
-		if (isset($query['tmpl'])) {
-			$tmpl = $query['tmpl'];
-			unset($query['tmpl']);
-		} else {
-			$tmpl = 0;
-		}
+		if (isset($query['tmpl'])) {	$tmpl = $query['tmpl'];
+										unset($query['tmpl']);
+		} else {						$tmpl = 0; }
 
-		if (isset($query['layout'])) {
-			$layout = $query['layout'];
-			unset($query['layout']);
-		} else {
-			$layout = 0;
-		}
+		if (isset($query['layout'])) {	$layout = $query['layout'];
+										unset($query['layout']);
+		} else {						$layout = 0; }
 
 		// setting segments
 		if ($view == 'joaktree') {
@@ -130,12 +98,12 @@ function JoaktreeBuildRoute( &$query ) {
 		} else if ($view == 'personform') {
 			if ($action) {
 				if ($tmpl) {
-					$segments[] = 'pf-'.$layout.'-'.$tech.'-'.$treeId.'-'.$action.'-'.$tmpl;
+					$segments[] = 'pf-'.$layout.'-'.$tech.'-'.$treeId.'-'.$dispId.'-'.$action.'-'.$tmpl;
 				} else {
-					$segments[] = 'pf-'.$layout.'-'.$tech.'-'.$treeId.'-'.$action;
+					$segments[] = 'pf-'.$layout.'-'.$tech.'-'.$treeId.'-'.$dispId.'-'.$action;
 				}
 			} else {
-				$segments[] = 'pf-'.$layout.'-'.$tech.'-'.$treeId;
+				$segments[] = 'pf-'.$layout.'-'.$tech.'-'.$treeId.'-'.$dispId;
 			}
 		} else if ($view == 'locations') {			
 			$segments[] = 'locations-'.$layout.'-'.$tech.'-'.$treeId.'-'.$filter;
@@ -179,8 +147,12 @@ function JoaktreeBuildRoute( &$query ) {
 			}
 		} else if ($view == 'mygenealogy') {
 			$segments[] = 'mygen-'.$layout.'-'.$tmpl;
+		} else if ($view == 'linkedpersons') {
+			$segments[] = 'linkedpersons-'.$layout.'-'.$appId.'-'.$treeId;
 		} else if ($view == 'uploadmanager') {
 			$segments[] = 'upman-'.$tmpl;
+		} else if ($view == 'community') {
+			$segments[] = 'community-'.$layout.'-'.$tech.'-'.$treeId.'-'.$tmpl.'-'.$action;
 		} else {
 			$segments[] = $view;
 		}
@@ -214,6 +186,7 @@ function JoaktreeBuildRoute( &$query ) {
 		   || ($view == 'descendants')
 		   || ($view == 'map')
 		   || ($view == 'interactivemap')
+		   || ($view == 'community')
 		   ) {
 			if (isset($query['personId'])) {
 				$segments[] = $query['personId'];
@@ -255,7 +228,6 @@ function JoaktreeBuildRoute( &$query ) {
 			}
 		}
 	}
-	
 	return $segments;
 }
 
@@ -271,7 +243,7 @@ function JoaktreeBuildRoute( &$query ) {
 function JoaktreeParseRoute($segments) {
 	
 	$vars 	= array();
-	
+
 	// fetch first segment and pull it apart
 	$elements    = explode( ':', $segments[0]);
 	$subelements = explode( '-', $elements[1]);	
@@ -324,8 +296,9 @@ function JoaktreeParseRoute($segments) {
 				if ($subelements[0]) { $vars['layout'] = $subelements[0]; }
 				$vars['tech']   = $subelements[1];
 				$vars['treeId'] = $subelements[2];
-				if (isset($subelements[3])) { $vars['action'] = $subelements[3]; }
-				if (isset($subelements[4])) { $vars['tmpl'] = $subelements[4]; }
+				$vars['dispId'] = $subelements[3];
+				if (isset($subelements[4])) { $vars['action'] = $subelements[4]; }
+				if (isset($subelements[5])) { $vars['tmpl'] = $subelements[5]; }
 				
 				if (isset($segments[1])) { $vars['personId'] = $segments[1]; }
 				if (isset($segments[2])) {
@@ -458,11 +431,26 @@ function JoaktreeParseRoute($segments) {
 				if ($subelements[0]) { $vars['layout']  = $subelements[0]; }
 				if ($subelements[1]) { $vars['tmpl']    = $subelements[1]; }
 				break;
+		case 'linkedpersons': 	
+				$vars['view'] 	  = 'linkedpersons';
+				if ($subelements[0]) { $vars['layout']  = $subelements[0]; }
+				if ($subelements[1]) { $vars['appId']   = $subelements[1]; }
+				if ($subelements[2]) { $vars['treeId']  = $subelements[2]; }
+				break;
 		case 'upman': 	
 				$vars['view'] 	  = 'uploadmanager';
 				if ($subelements[0]) { $vars['tmpl']    = $subelements[0]; }
 				break;
-		default:
+		case 'community': 	
+				$vars['view'] 	  = 'community';
+				if ($subelements[0]) { $vars['layout'] 	= $subelements[0]; }
+				if ($subelements[1]) { $vars['tech'] 	= $subelements[1]; }
+				if ($subelements[2]) { $vars['treeId'] 	= $subelements[2]; }
+				if ($subelements[3]) { $vars['tmpl']    = $subelements[3]; }
+				if ($subelements[4]) { $vars['action']  = $subelements[4]; }
+				if (isset($segments[1])) { $vars['personId'] = $segments[1]; }			
+				break;
+		default:		
 				$vars['view'] 	  = $elements[0];
 				break;
 	}

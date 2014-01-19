@@ -53,19 +53,23 @@ class JoaktreeHelper {
 		return $_params;
 	}
 	
-	public static function getActions($tree = true) {
+	public static function getActions($type = 'tree') {
 		$user	= JFactory::getUser();
 		$result	= new JObject;
-		$appId  = self::getApplicationId();
-		if ($tree) {
-			$treeId = self::getTreeId();
-			//$appId  = self::getApplicationId();
-			$asset	= 'com_joaktree.application.'.$appId.'.tree.'.$treeId;
-		} else {
-			//$appId  = self::getAppId();
-			$asset	= 'com_joaktree.application.'.$appId;
+		
+		switch ($type) {
+			case "component":	$asset	= 'com_joaktree';
+								break;
+			case "application": $appId  = self::getApplicationId();
+								$asset	= 'com_joaktree.application.'.$appId;
+								break;
+			case "tree":		// continue
+			default:			$appId  = self::getApplicationId();
+								$treeId = self::getTreeId();
+								$asset	= 'com_joaktree.application.'.$appId.'.tree.'.$treeId;
+								break;
 		}
-
+		
 		$actions = array(
 			'core.create', 'core.edit', 'core.delete', 'core.edit.state', 
 		);
@@ -74,8 +78,8 @@ class JoaktreeHelper {
 			$result->set($action, $user->authorise($action, $asset));
 		}
 		
-		// special treatement for media - we take the authorisation from media manager
-		$result->set('media.create', $user->authorise('core.create', 'com_media'));
+		// special treatement for media - we take the authorisation from media manager, but only if user can edit
+		$result->set('media.create', ($user->authorise('core.edit', $asset) && $user->authorise('core.create', 'com_media')));
 		
 		return $result;
 	}
@@ -123,50 +127,29 @@ class JoaktreeHelper {
 
 		if (!isset($_treeId)) {
 			$db = JFactory::getDBO();
-			$input = JFactory::getApplication()->input;	
+			$input = JFactory::getApplication()->input;			
 			
 			$tmp1 = $input->get('treeId', null, 'string');
 			$tmp2 = $input->get('treeId', null, 'int');
-
+			
+			if (empty($tmp2) && (!$requestonly)) {
+				// no tree id in request, try the parameters.
+				$params = self::getJTParams($requestonly);			
+				$tmp1 = $params->get('treeId');		
+ 				$tmp2 = (int) $tmp1; 			
+			}	
+			
 			if (empty($tmp2)) {
+				$query = $db->getQuery(true);
 				// no treeId is given in request
-				if ($intern) {
-					// Function is called from getPersonId
-					// That means that there is also no person given in request.
-					// We can therefore first try  to treeId from user id	
-					$query = $db->getQuery(true);
-					$query->select(' jur.tree_id ');
-					$query->from(  ' #__joaktree_users  jur ');
-					$query->where(' jur.user_id    = '.(int)JFactory::getUser()->id.' ');
-			
-					$db->setQuery( $query );
-					$tmp1 = $db->loadResult(); 
-		 			$tmp2 = (int) $tmp1; 			
-			
-		 			if ($error = $db->getErrorMsg()) {
-						throw new JException($error);
-					}
-					
-					// Still no luck? we can therefore first try the parameters, if appropiate 
-					if (empty($tmp2) &&(!$requestonly)) {
-						// no tree id in request, try the parameters.
-						$params = self::getJTParams($requestonly);			
-						$tmp1 = $params->get('treeId');		
-						$tmp2 = (int) $tmp1; 			
-					}	
-					
-					// we are done. Nothing left over to try 
-					if (empty($tmp2)) {
-						die('wrong request');
-					}
-					
-				} else {
-					$personId 	= JoaktreeHelper::getPersonId(true, $requestonly);					 
+				if (!$intern) {
+					// try to see if there is a person in the request ...
+					$personId 	= JoaktreeHelper::getPersonId(true, $requestonly);	
 					$app_id     = JoaktreeHelper::getApplicationId(true, $requestonly);  
 					$levels 	= self::getUserAccessLevels() ;
 					
 					if (isset($personId) and isset($app_id) and isset($levels)) {								
-						$query = $db->getQuery(true);
+						$query->clear();
 						$query->select(' jan.default_tree_id ');
 						$query->from(  ' #__joaktree_admin_persons  jan ');
 						$query->innerJoin(' #__joaktree_trees  jte '
@@ -179,27 +162,73 @@ class JoaktreeHelper {
 						$query->where(' jte.access    IN '.$levels.' ');
 						$query->where(' jte.published = true ');								
 						$db->setQuery( $query );
-						$tmp1 = $db->loadResult(); 
-						$tmp2 = (int) $tmp1; 			
+						$tmp3 = $db->loadResult(); 
 						
 						if ($error = $db->getErrorMsg()) {
 							throw new JException($error);
-						}						
+						}
+						
+						if ($tmp3 == null) {
+							// Nothing is retrieved. Person does not exists or has an emtpy default tree.
+							// We set treeId to 0, and let the standard no access message be the result.
+							$tmp3 = 0;
+						}
 					} else {
-						$tmp1 = null; 
-						$tmp2 = (int) $tmp1; 			
+						// try to fetch treeId from user id	
+						$query->clear();
+						$query->select(' jur.tree_id ');
+						$query->from(  ' #__joaktree_users  jur ');
+						$query->where(' jur.user_id    = '.(int)JFactory::getUser()->id.' ');
+				
+						$db->setQuery( $query );
+						$tmp3 = $db->loadResult(); 
+				
+			 			if ($error = $db->getErrorMsg()) {
+							throw new JException($error);
+						}
+						
+						if ($tmp3 == null) {
+							// Nothing is retrieved. 
+							// We set treeId to 0, and let the standard no access message be the result.
+							$tmp3 = 0;
+						}
 					}
+				} else {
+					// Function is called from getPersonId
+					// That means that there is also no person given in request.
+
+					// try to fetch treeId from user id	
+					$query->clear();
+					$query->select(' jur.tree_id ');
+					$query->from(  ' #__joaktree_users  jur ');
+					$query->where(' jur.user_id    = '.(int)JFactory::getUser()->id.' ');
+			
+					$db->setQuery( $query );
+					$tmp3 = $db->loadResult(); 
+			
+		 			if ($error = $db->getErrorMsg()) {
+						throw new JException($error);
+					}
+					
+					if ($tmp3 == null) {
+						// Nothing is retrieved. 
+						// We set treeId to 0, and let the standard no access message be the result.
+						$tmp3 = 0;
+					}
+				}				
+			} else {
+				// something is given -> check this
+				if ($tmp1 !== (string)$tmp2) {
+					die('wrong request');
+				} else if ($tmp2 <= 0) {
+					die('wrong request');
+				} else {
+					$tmp3 = intval($tmp2);				
 				}	
 			}
-
-			// something is given -> check this
-			if ($tmp1 !== (string)$tmp2) {
-				die('wrong request');
-			} else if ($tmp2 <= 0) {
-				die('wrong request');
-			} else {
-				$_treeId = $db->escape((int)$tmp2);
-			}	
+			
+			$_treeId = $db->escape($tmp3);
+			
 		}		
 
 		return $_treeId;
@@ -448,12 +477,32 @@ class JoaktreeHelper {
 		return $_sourceId;
 	}
 	
+	public function getDispId($optional = false) {
+		static $_dispId;
+		
+		if (!isset($_dispId)) {
+			$tmp   = JFactory::getApplication()->input->get('dispId', null, 'int');
+			
+			if (empty($tmp)) {
+				// no display Id is given in request
+				if ($optional) {
+					$_dispId = null;					
+				} else {
+					die('wrong request');	
+				}
+			} else {
+				$_dispId = (int) $tmp;
+			}	
+		}
+
+		return $_dispId;
+	}
+	
 	public function getAction() {
  		static $_action;
  		
  		if (!isset($_action)) {
- 			$input = JFactory::getApplication()->input;
- 			$tmp = $input->get('action');
+ 			$tmp = JFactory::getApplication()->input->get('action');
  			if ($tmp == 'select') {
  				$_action = $tmp;
  			} else if ($tmp == 'edit') {
@@ -908,7 +957,7 @@ class JoaktreeHelper {
 		return $_menuTreeId;
 	}
 	
-	private function getMenuId( $tree_id, $view) {
+	public function getMenuId( $tree_id, $view) {
 		$menu 		= &JSite::getMenu();
 		$component	= &JComponentHelper::getComponent('com_joaktree');
 		$items		= $menu->getItems('component_id', $component->id);

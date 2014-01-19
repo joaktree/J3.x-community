@@ -22,8 +22,22 @@ if (($this->lists['technology'] != 'b') && ($this->lists['technology'] != 'j')) 
 	   			$html .= JText::_('JT_EDITEVENTS');
 	   			$html .= '</span>';
 			}
+			
+			$domainEvents = FormHelper::checkDomainEvents('person', $this->person->living);
+			foreach ($domainEvents as $domainEvent) {
+	   			$html .= '&nbsp;|&nbsp;';
+				if ($this->canDo->get('core.edit')) {
+					$html .= '<a href="#" onclick="$(\'joaktreeForm\').domainevent.value ='.$domainEvent->id.' ; jtsubmitbutton(\'edit\', \'domainevent\');" >';
+					$html .= JText::sprintf('JT_EDIT_DOMAINEVENT', JText::_($domainEvent->code));
+					$html .= '</a>';	
+				} else {
+					$html .= '<span class="jt-edit-nolink" title="'.JText::_('JT_NOPERMISSION_DESC').'" >';
+		   			$html .= JText::sprintf('JT_EDIT_DOMAINEVENT', JText::_($domainEvent->code));
+		   			$html .= '</span>';
+				}
+	   		}
 	   		$html .= '&nbsp;|';
-			$html .= '</div>';
+	   		$html .= '</div>';
 	   	}
 	}
 }

@@ -4,6 +4,7 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.modal', 'a.modal_person');
 
 // import component libraries
 JLoader::import('helper.formhelper', JPATH_COMPONENT);
@@ -24,6 +25,25 @@ $document->addScript( JoaktreeHelper::joaktreejs('uploadmanager_progressbar.js')
 			alert('<?php echo $this->escape(JText::_('JT_VALIDATION_FORM_FAILED'));?>');
 		}
 	}
+
+	function jtstart(val) {
+		if(val==1) {
+			$('gedcom').setStyle('display', 'block');
+			$('selectperson').setStyle('display', 'none');
+		} else if(val==2) {
+			$('gedcom').setStyle('display', 'none');
+			$('selectperson').setStyle('display', 'block');
+		} else {
+			$('gedcom').setStyle('display', 'none');
+			$('selectperson').setStyle('display', 'none');
+		}
+	}
+
+	function jtSelectPerson(app_id, id, name) {
+		SqueezeBox.close();
+		$('jt-person').value = name;
+		$('jt-person_id').value = app_id + '!' + id;	
+	}		
 </script>
 
 <div id="jt-form"> 
@@ -32,8 +52,6 @@ $document->addScript( JoaktreeHelper::joaktreejs('uploadmanager_progressbar.js')
 <?php if (true) { ?> 
 <!-- user has access to information -->
 <div class="fltlft">
-
-<?php print_r($this->item); ?>
 
 	<fieldset class="joaktreeform">
 		<legend><?php echo JText::_('JTTREE_TITLE_NEWNAME'); ?></legend>
@@ -54,8 +72,8 @@ $document->addScript( JoaktreeHelper::joaktreejs('uploadmanager_progressbar.js')
 			</li>
 			
 			<li>
-				<?php echo $this->form->getLabel('indGedCom'); ?>
-				<?php echo $this->form->getInput('indGedCom'); ?>			
+				<?php echo $this->form->getLabel('indStartType'); ?>
+				<?php echo $this->form->getInput('indStartType'); ?>			
 			</li>
 			
 		</ul>
@@ -95,6 +113,42 @@ $document->addScript( JoaktreeHelper::joaktreejs('uploadmanager_progressbar.js')
 			</div>
 		</div>
 
+		<div class="jt-clearfix"></div>
+		<div id="selectperson" style="display: none;">
+			<ul class="joaktreeformlist">
+				<li>
+					<?php if ($this->lists['community'] == 2) { ?>
+						<?php $link = JRoute::_('index.php?option=com_joaktree&view=joaktreelist&tmpl=component&layout=select&treeId=1&action=select'); ?>
+						<label> 
+							<a	class="modal_person jt-button-closed jt-buttonlabel" 
+								style="float: left;"
+								href="<?php echo $link; ?>"
+								rel="{handler: 'iframe', size: {x: 800, y: 500}}"
+							>
+								<?php echo JText::_('JTMAP_SELECTPERSON'); ?>
+							</a>
+						</label>
+	
+						<input 
+							id="jt-person" 	 
+							name="person" 
+							class="inputbox readonly" 
+							type="text" 
+							value="" 
+							disabled="disabled" 
+						/>
+						<input 
+							id="jt-person_id" 
+							name="jform[person_id]" 
+							type="hidden" 
+							value="" 
+						/>
+					<?php } else { ?>
+						<?php echo JText::_('JTTREE_LABEL_NOCOMMUNITYTREE'); ?>
+					<?php } ?>
+				</li>
+			</ul>
+		</div>
 
 		<div class="jt-clearfix"></div>
 		<!-- Save + cancel buttons -->
@@ -139,8 +193,7 @@ $document->addScript( JoaktreeHelper::joaktreejs('uploadmanager_progressbar.js')
 			//maxsize: 100,
 			
 			//where to send the upload request
-			//base: '../community/index.php?option=com_joaktree&view=uploadmanager',
-			base: '..<?php echo JRoute::_('index.php?format=raw&tmpl=component&option=com_joaktree&view=uploadmanager'); ?>',   
+			base: '<?php echo JRoute::_('index.php?option=com_joaktree&view=uploadmanager&tmpl=component&format=raw'); ?>',     
 
 			//filter file types
 			filetype: 'ged',

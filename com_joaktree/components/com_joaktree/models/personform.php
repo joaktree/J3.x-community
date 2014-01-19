@@ -227,6 +227,8 @@ class JoaktreeModelPersonform extends JModelForm {
 				switch ($form['type']) {
 					case "pevents": $ret = $this->save_events($form, 'person');
 									break;
+					case "domain": 	$ret = $this->save_events($form, 'domain');
+									break;
 					case "revents": $ret = $this->save_events($form, 'relation');
 									break;
 					case "names": 	$ret = $this->save_names($form, 'all');
@@ -465,6 +467,7 @@ class JoaktreeModelPersonform extends JModelForm {
 									}				
 									break;
 				case "person":		// person same as default
+				case "domain":		// domain same as default
 				default		 :		$tabEvent	= JTable::getInstance('joaktree_person_events', 'Table');
 									$tabEvent->person_id        	= $form['person']['id'];
 									break;
@@ -475,16 +478,24 @@ class JoaktreeModelPersonform extends JModelForm {
 			
 			for ($i=0; $i<count($form['person']['events']['orderNumber']); $i++){
 				switch ($level) {
-					case "relation":	$code = $form['person']['events']['relcode'][$i];				
+					case "relation":	$code = $form['person']['events']['relcode'][$i];
+										$type = htmlspecialchars($form['person']['events']['type'][$i], ENT_QUOTES, 'UTF-8');
+										$value = htmlspecialchars($form['person']['events']['value'][$i], ENT_QUOTES, 'UTF-8');
+										break;
+					case "domain":		$code = $form['person']['events']['domaincode'][$i];				
+										$type = null;
+										$value = htmlspecialchars($form['person']['events']['domainvalue'][$i], ENT_QUOTES, 'UTF-8');
 										break;
 					case "person":		// person same as default
 					default		 :		$code = $form['person']['events']['code'][$i];	
+										$type = htmlspecialchars($form['person']['events']['type'][$i], ENT_QUOTES, 'UTF-8');
+										$value = htmlspecialchars($form['person']['events']['value'][$i], ENT_QUOTES, 'UTF-8');
 										break;
 				}
 				
 				$tabEvent->orderNumber 	= $form['person']['events']['orderNumber'][$i];
 				$tabEvent->code		 	= $code;
-				$tabEvent->type		 	= htmlspecialchars($form['person']['events']['type'][$i], ENT_QUOTES, 'UTF-8');	
+				$tabEvent->type		 	= $type;	
 			
 				// create string for eventdate
 				$eventDate = '';
@@ -539,7 +550,7 @@ class JoaktreeModelPersonform extends JModelForm {
 				$tabEvent->location	 	= htmlspecialchars($form['person']['events']['location'][$i], ENT_QUOTES, 'UTF-8');
 				
 				// set the value
-				$tabEvent->value		= htmlspecialchars($form['person']['events']['value'][$i], ENT_QUOTES, 'UTF-8');
+				$tabEvent->value		= $value;
 	
 				// Make sure the table is valid
 				if (!$tabEvent->check()) {
@@ -673,6 +684,7 @@ class JoaktreeModelPersonform extends JModelForm {
 								}
 								break;
 			case "person":		// person same as default
+			case "domain":		// domain same as default
 			default		 :		$tabRef->person_id_1 = $form['person']['id'];
 								$tabRef->person_id_2 = 'EMPTY';
 								break;
@@ -682,6 +694,7 @@ class JoaktreeModelPersonform extends JModelForm {
 		
 		for ($i=0; $i<count($form['person']['references']['objectOrderNumber']); $i++){
 			$tabRef->objectType		= $form['person']['references']['objectType'][$i];
+			$tabRef->objectType		= ($tabRef->objectType == 'domainEvent') ? 'personEvent' : $tabRef->objectType;
 			$tabRef->objectOrderNumber	
 									= $form['person']['references']['objectOrderNumber'][$i];
 			$tabRef->source_id		= $form['person']['references']['app_source_id'][$i];
@@ -698,7 +711,7 @@ class JoaktreeModelPersonform extends JModelForm {
 			$tabRef->note			= (!empty($form['person']['references']['note'][$i]))
 										? htmlspecialchars($form['person']['references']['note'][$i], ENT_QUOTES, 'UTF-8')
 										: null;
-			
+//print_r($tabRef); stop();			
 			// Make sure the table is valid
 			if (!$tabRef->check()) {
 				$this->setError('Error checking reference: ');
@@ -743,6 +756,7 @@ class JoaktreeModelPersonform extends JModelForm {
 								}				
 								break;
 			case "person":		// person same as default
+			case "domain":		// domain same as default
 			default		 :		$tabNot	= JTable::getInstance('joaktree_person_notes', 'Table');
 								$tabNot->person_id   = $form['person']['id'];
 								break;

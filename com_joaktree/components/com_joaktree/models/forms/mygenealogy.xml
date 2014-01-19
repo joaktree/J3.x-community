@@ -36,16 +36,17 @@
 		/>
 			
 		<field
-			name="indGedCom"
+			name="indStartType"
 			type="list"
 			class="inputbox"
-			label="JTIMPORTGEDCOM_TITLE"
-			description="JTIMPORTGEDCOM_TITLE"
+			label="JTSTARTTYPE_TITLE"
+			description="JTSTARTTYPE_TITLE"
 			default="0"
-			onchange="if(this.value==1){$('gedcom').setStyle('display', 'block');}else{$('gedcom').setStyle('display', 'none');}"
+			onchange="jtstart(this.value);"
 		>
-				<option	value="0">JNO</option>
-				<option value="1">JYES</option>
+				<option	value="0">JTSTART_SCRATCH</option>
+				<option value="1">JTSTART_GEDCOM</option>
+				<option value="2">JTSTART_COPY</option>
 		</field>	
 					
 		<field	name="path_file"

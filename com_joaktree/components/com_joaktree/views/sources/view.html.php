@@ -75,7 +75,7 @@ class JoaktreeViewSources extends JViewLegacy {
 		}
 				
 		if ($params->get('siteedit', 1)) {	
-			$this->canDo	= JoaktreeHelper::getActions(false);	
+			$this->canDo	= JoaktreeHelper::getActions('application');	
 		} else {
 			$this->canDo	= null;
 		}

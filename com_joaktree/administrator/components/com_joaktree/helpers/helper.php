@@ -200,7 +200,7 @@ class JoaktreeHelper {
 		return $name;
 	}
 	
-	public function getJTParams($app_id) {
+	public function getJTParams($app_id = null) {
 		static $_params;
 		static $localAppId;
 

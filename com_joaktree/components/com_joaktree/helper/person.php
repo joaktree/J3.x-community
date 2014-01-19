@@ -19,6 +19,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+jimport('joomla.filesystem.file');
 JLoader::register('MBJServiceStaticmap',  JPATH_ADMINISTRATOR.DS.'components'.DS.'com_joaktree'.DS.'services'.DS.'staticmap.php');
 
 class Person extends JObject { 
@@ -162,7 +163,8 @@ class Person extends JObject {
 		}
 		
 		$query->innerJoin(JoaktreeHelper::getJoinAdminPersons(true));
-					  
+		
+		$query->select(' jte.kunenacatid ');
 		if ($indFull) {
 			// select from tree x persons
 			$query->select(' jtp.tree_id           AS tree_id ');
@@ -377,6 +379,7 @@ class Person extends JObject {
 		$this->indHasPage		= $person[ 'indHasPage' ];
 		$this->indNameDisplay	= $person[ 'indNameDisplay' ];
 		$this->robots			= $person[ 'robots' ];
+		$this->kunenacatid		= $person[ 'kunenacatid' ];
 		
 		// names
 		if ($indFull) {
@@ -426,7 +429,7 @@ class Person extends JObject {
 		if (!isset($this->menuItemId)) {
 			$menu				= $app->getMenu();
 			$item				= $menu->getActive();
-			$this->menuItemId 	= $item->id;		
+			$this->menuItemId 	= (isset($item->id)) ? $item->id : null;		
 		}
 	}
 
@@ -572,6 +575,7 @@ class Person extends JObject {
 			// select from settings
 			$query->select(' jds.ordering ');
 			$query->select(' jds.domain ');
+			$query->select(' jds.id AS display_id ');
 			$query->innerJoin(' #__joaktree_display_settings  jds '
 							 .' ON (   jds.code  = jpe.code '
 							 .'    AND jds.level = '.$this->_db->Quote( 'person' ).' '
@@ -580,6 +584,14 @@ class Person extends JObject {
 							 );
 			$query->order(' jds.ordering ');
 			$query->order(' jpe.orderNumber ');
+			
+			// select from domains
+			$query->leftJoin(' #__joaktree_event_domains  jed '
+							 .' ON (   jds.domain     = true '
+							 .'    AND jed.display_id = jds.id '
+							 .'    AND jed.id         = CAST(jpe.value AS SIGNED INTEGER) '
+							 .'    ) '
+							 );
 			
 			// select from locations
 			$query->select(' jln.longitude ');
@@ -590,7 +602,7 @@ class Person extends JObject {
 				// not living
 				$query->select(' jpe.eventDate ');
 				$query->select(' jpe.location ');
-				$query->select(' jpe.value ');
+				$query->select(' IFNULL(jed.value, jpe.value) AS value ');
 				$query->select(' IF( '.$displayAccess['ENOTperson']->notLiving.' > 0 '
 							  .'   , jpe.indNote '
 							  .'   , false '
@@ -622,7 +634,7 @@ class Person extends JObject {
 							  );
 				$query->select(' IF( jds.accessLiving NOT IN '.$this->_levels.' '
 							  .'   , NULL '
-							  .'   , jpe.value '
+							  .'   , IFNULL(jed.value, jpe.value) '
 							  .'   ) AS value '
 							  );
 				$query->select(' IF( '.$displayAccess['ENOTperson']->living.' > 0 '
@@ -1883,6 +1895,25 @@ class Person extends JObject {
 		} else {
 			return false;
 		}						
+	}
+
+	public function getTreeAndAppNames($tree_id = null) {
+		$tree_id	= (!empty($tree_id)) ? (int) $tree_id : $this->tree_id;
+		$query		= $this->_db->getQuery(true);
+		
+		$query->select(' jte.name AS tree_name ');
+		$query->from(  ' #__joaktree_trees  jte  ');
+		$query->where( ' jte.id = '.(int) $tree_id.' ');
+		
+		$query->select(' japp.title AS app_name ');
+		$query->innerJoin(' #__joaktree_applications  japp '
+						 .' ON (japp.id = jte.app_id) '
+						 );
+		
+		$this->_db->setQuery( $query );
+		$result = $this->_db->loadAssoc();
+						 
+		return $result;
 	}
 }
 ?>

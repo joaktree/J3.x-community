@@ -35,6 +35,46 @@ class JoaktreeControllerMygenealogy extends JoaktreeController {
 		parent::__construct();
 	}
 	
+	function navigate() {
+		$form   = $this->input->get('jform', null, 'array');
+		
+		if ($form['wizard'] == 12) {
+			$link =  'index.php?option=com_joaktree'
+							.'&view=joaktree'
+							.'&tech='.$form['tech']
+							.'&Itemid='.JoaktreeHelper::getMenuId($form['tree_id'], 'joaktree')
+							.'&treeId='.$form['tree_id']
+							.'&personId='.$form['person_id'];
+									
+			$this->setRedirect(Jroute::_($link));		
+		}
+		
+	}
+	
+	function edit_me() {
+		$form   = $this->input->get('jform', null, 'array');
+		
+		if (($form['wizard'] == 11) || ($form['wizard'] == 12)) {
+			$link =  'index.php?option=com_joaktree'
+							.'&view=mygenealogy'
+							.'&layout=wizard03';
+									
+			$this->setRedirect(Jroute::_($link));		
+		}
+	}
+	
+	function edit_tree() {
+		$form   = $this->input->get('jform', null, 'array');
+		
+		if (($form['wizard'] == 11) || ($form['wizard'] == 15)) {
+			$link =  'index.php?option=com_joaktree'
+							.'&view=mygenealogy'
+							.'&layout=wizard01';
+									
+			$this->setRedirect(Jroute::_($link));		
+		}
+	}
+	
 	function delete() {
 		$model = $this->getModel('mygenealogy');
 		
@@ -46,108 +86,30 @@ class JoaktreeControllerMygenealogy extends JoaktreeController {
 		$this->setRedirect(Jroute::_($link), $msg);
 	}
 	
-//	function edit() {
-//		$personId  = $this->input->get('personId', null, 'string');
-//		$treeId    = $this->input->get('treeId', null, 'int');
-//		$object    = $this->input->get('object', null, 'string');
-//		
-//		$link =  'index.php?option=com_joaktree'
-//						.'&view=personform'
-//						.'&tech=a'
-//						.'&treeId='.$treeId;
-//						
-//		switch ($object) {
-//			case "names":		$link .= '&layout=form_names'
-//										.'&personId='.$personId;
-//								break;
-//			case "state":		$link .= '&layout=form_state'
-//										.'&personId='.$personId;
-//								break;
-//			case "medialist":	$link .= '&layout=form_medialist'
-//										.'&personId='.$personId;
-//								break;
-//			case "media":		$picture = $this->input->get('picture', null, 'string');
-//								$link .= '&layout=form_media'
-//										.'&personId='.$personId
-//										.'&picture='.$picture;		
-//								break;
-//			case "notes":		$link .= '&layout=form_notes'
-//										.'&personId='.$personId;
-//								break;
-//			case "references":	$link .= '&layout=form_references'
-//										.'&personId='.$personId;
-//								break;
-//			case "pictures":	$link .= '&layout=form_pictures'
-//										.'&personId='.$personId;
-//								break;
-//			case "parents":		$link .= '&layout=form_parents'
-//										.'&personId='.$personId;
-//								break;
-//			case "partners":	$link .= '&layout=form_partners'
-//										.'&personId='.$personId;
-//								break;
-//			case "partnerevents":	
-//								$relationId = $this->input->get('relationId', null, 'string');
-//								$link .= '&layout=form_partner_events'
-//										.'&personId='.$personId
-//										.'&relationId='.$relationId;
-//								break;						
-//			case "children":	$link .= '&layout=form_children'
-//										.'&personId='.$personId;
-//								break;
-//			case "newparent":	$tmp = explode('!', $personId);
-//								$personId = $tmp[0].'!';
-//								$relationId = $tmp[1];
-//								$link .= '&layout=default'
-//										.'&personId='.$personId
-//										.'&relationId='.$relationId
-//										.'&action=addparent';
-//								break;
-//			case "newpartner":	$tmp = explode('!', $personId);
-//								$personId = $tmp[0].'!';
-//								$relationId = $tmp[1];
-//								$link .= '&layout=default'
-//										.'&personId='.$personId
-//										.'&relationId='.$relationId
-//										.'&action=addpartner';
-//								break;
-//			case "newchild":	$tmp = explode('!', $personId);
-//								$personId = $tmp[0].'!';
-//								$relationId = $tmp[1];
-//								$link .= '&layout=default'
-//										.'&personId='.$personId
-//										.'&relationId='.$relationId
-//										.'&action=addchild';
-//								break;
-//			case "pevents":		// continue
-//			default:			$link .= '&layout=default'
-//										.'&personId='.$personId;
-//								break; 
-//      		}
-//		
-//		
-//		$this->setRedirect(Jroute::_($link), $msg);
-//	}
-	
 	function save() {
 		$model = $this->getModel('mygenealogy');
 		
-		$form   = $this->input->get('jform', null, 'array');
-		
+		$form   = $this->input->get('jform', null, 'array');		
 		$ids = $model->save($form);
 		$msg = ($ids) ? JText::_('JT_SAVED') : JText::_('JT_NOTSAVED');		
 
 		$link =  'index.php?option=com_joaktree';
-		if (($form['wizard'] == 1) && ($ids) && ($form['indGedCom'] == 1)) {
+		if (($form['wizard'] == 1) && ($ids) && ($form['indStartType'] == 0)) {
+			// Add first person
+			$link .= '&view=personform'
+				 		.'&appId='.$ids['app']
+				 		.'&treeId='.$ids['tree'];
+				 		
+		} else if (($form['wizard'] == 1) && ($ids) && ($form['indStartType'] == 1)) {
 			// load GedCom
 			$model->initObject($ids['app']);
 			$msg 	= null;
 			$link .= '&view=mygenealogy'
 				 		.'&layout=wizard02';	
 			
-		} else if (($form['wizard'] == 1) && ($ids) && ($form['indGedCom'] == 0)) {
+		} else if (($form['wizard'] == 1) && ($ids) && ($form['indStartType'] == 2)) {
 			// Add first person
-			$link .= '&view=personform'
+			$link .= '&view=joaktreestart'
 				 		.'&appId='.$ids['app']
 				 		.'&treeId='.$ids['tree'];
 		} else {

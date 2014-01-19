@@ -124,6 +124,11 @@ class JoaktreeControllerPersonform extends JoaktreeController {
 										.'&relationId='.$relationId
 										.'&action=addchild';
 								break;
+			case "domainevent":	$domain    = $this->input->get('domainevent', null, 'int');
+								$link .= '&layout=form_domainevent'
+										.'&personId='.$personId
+									    .'&dispId='.(int)$domain;
+								break;
 			case "pevents":		// continue
 			default:			$link .= '&layout=default'
 										.'&personId='.$personId;
@@ -139,7 +144,7 @@ class JoaktreeControllerPersonform extends JoaktreeController {
 		
 		$form     	= $this->input->get('jform', null, 'array');
 		$treeId   	= $this->input->get('treeId', null, 'int');
-		
+	
 		$msg = $model->save($form);
 		
 		$link =  'index.php?option=com_joaktree'

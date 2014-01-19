@@ -76,7 +76,7 @@ class JoaktreeControllerJt_maps extends JoaktreeController {
 		$this->setRedirect($link, $msg);
 	}
 
-	public function cancel() {
+	public function cancel() {		
 		$link = 'index.php?option=com_joaktree&view=jt_maps';
 		$this->setRedirect($link);
 	}

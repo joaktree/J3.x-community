@@ -56,16 +56,21 @@ class FormHelper extends JObject {
 			if ($type == 'relationEvent') {
 				$html[] = $form->getLabel('relcode', $formRecord);
 				$html[] = $form->getInput('relcode', $formRecord, (($indPHP) ? $object->code : null));
+			} else if ($type == 'domainEvent') {
+				$html[] = $form->getLabel('domaincode', $formRecord);
+				$html[] = $form->getInput('domaincode', $formRecord, (($indPHP) ? $object->code : null));
 			} else {
 				$html[] = $form->getLabel('code', $formRecord);
 				$html[] = $form->getInput('code', $formRecord, (($indPHP) ? $object->code : null));
 			}
 			
-			$html[] = $form->getLabel('type', $formRecord);
-			$html[] = $form->getInput('type', $formRecord, (($indPHP) 
-															? htmlspecialchars_decode($object->type, ENT_QUOTES) 
-															: null
-															));
+			if ($type != 'domainEvent') {
+				$html[] = $form->getLabel('type', $formRecord);
+				$html[] = $form->getInput('type', $formRecord, (($indPHP) 
+																? htmlspecialchars_decode($object->type, ENT_QUOTES) 
+																: null
+																));
+			}
 			
 			$htmlEventdate = self::getEventDateHTML((($indPHP) 
 													? htmlspecialchars_decode($object->eventDate, ENT_QUOTES)  
@@ -80,11 +85,19 @@ class FormHelper extends JObject {
 																? htmlspecialchars_decode($object->location, ENT_QUOTES) 
 																: null
 																));
-			$html[] = $form->getLabel('value', $formRecord);
-			$html[] = $form->getInput('value', $formRecord, (($indPHP) 
-															? htmlspecialchars_decode($object->value, ENT_QUOTES) 
-															: null
-															));
+			if ($type == 'domainEvent') {
+				$html[] = $form->getLabel('domainvalue', $formRecord);
+				$html[] = $form->getInput('domainvalue', $formRecord, (($indPHP) 
+																? htmlspecialchars_decode($object->value, ENT_QUOTES) 
+																: null
+																));
+			} else {
+				$html[] = $form->getLabel('value', $formRecord);
+				$html[] = $form->getInput('value', $formRecord, (($indPHP) 
+																? htmlspecialchars_decode($object->value, ENT_QUOTES) 
+																: null
+																));
+			}
 			$html[] = '</td>';
 		}
 
@@ -1245,5 +1258,39 @@ class FormHelper extends JObject {
 			return false;
 		}		
 	}
+	
+	public function checkDomainEvents($gedcomtype = 'person', $indLiving) {
+		// Get the database object.
+		$db = JFactory::getDBO();
+		$query	= $db->getQuery(true);
+		$levels  = JoaktreeHelper::getUserAccessLevels();
+		$indLiving = (empty($indLiving)) ? false : $indLiving;
+		
+		$query->select(' id ');
+		$query->select(' code ');
+		$query->from(  ' #__joaktree_display_settings ');
+		$query->where( ' level = '.$db->quote($gedcomtype).' ');
+		$query->where( ' published = true ');
+		$query->where( ' domain    = true ');
+		
+		$query->where( ' code NOT IN ('
+							.$db->quote('NAME').', '
+							.$db->quote('NOTE').', '
+							.$db->quote('ENOT').', '
+							.$db->quote('SOUR').', '
+							.$db->quote('ESOU')
+							.') ');
+		
+		if ($indLiving == false) {
+			$query->where( ' access IN '.$levels.' ');
+		} else {
+			$query->where( ' accessLiving IN '.$levels.' ');
+		}
+		
+		// Set the query and get the result list.
+		$db->setQuery($query);
+		return $db->loadObjectList();
+	}
+	
 }
 ?>

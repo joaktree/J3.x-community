@@ -32,6 +32,7 @@ class JoaktreeViewJt_applications extends JViewLegacy {
 		$app = JFactory::getApplication();				
 		JHTML::stylesheet( JoaktreeHelper::joaktreecss() );
 		$this->canDo	= JoaktreeHelper::getActions();
+		$this->params	= JoaktreeHelper::getJTParams();		
 				
 		// Get data from the model
 		$items			= & $this->get( 'Data' );

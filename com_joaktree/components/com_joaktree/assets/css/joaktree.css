@@ -251,12 +251,48 @@ div.jt-index-size {
 }
 
 
-.jt-btn-close {
-    background: url("../images/closebox.png") no-repeat scroll center center transparent;
+.jt-btn-close, .jt-btn-plus, .jt-btn-cross {
     border: medium none;
     height: 30px;
     width: 30px;
     float: right;
+}
+
+.jt-btn-close {
+    background: url("../images/closebox.png") no-repeat scroll center center transparent;
+}
+
+.jt-btn-plus {
+    background: url("../images/plus.png") no-repeat scroll center center transparent;
+}
+
+.jt-btn-cross {
+    background: url("../images/cross.png") no-repeat scroll center center transparent;
+}
+
+.jt-person {
+    background: url("../images/person-16.png") no-repeat scroll center center transparent;
+    padding: 2px 8px;
+}
+
+.jt-ancestors {
+    background: url("../images/ancestors-16.png") no-repeat scroll center center transparent;
+    padding: 2px 8px;
+}
+
+.jt-descendants {
+    background: url("../images/descendants-16.png") no-repeat scroll center center transparent;
+    padding: 2px 8px;
+}
+
+.jt-information {
+    background: url("../images/information-16.png") no-repeat scroll center center transparent;
+    padding: 2px 8px;
+}
+
+.jt-discuss {
+    background: url("../images/discuss-16.png") no-repeat scroll center center transparent;
+    padding: 2px 8px;
 }
 
 /* Joaktree forms, lists */

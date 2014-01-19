@@ -32,6 +32,7 @@ class TableJoaktree_trees extends JTable
 	var $holds				= null;
 	var $robots				= null;
 	var $catid          	= null;
+	var $kunenacatid       	= null;
 	
 	function __construct( &$db) {
 		parent::__construct('#__joaktree_trees', 'id', $db);
@@ -44,7 +45,7 @@ class TableJoaktree_trees extends JTable
 	 *
 	 * @return  string
 	 */
-	protected function _getAssetName() {
+	protected function _getAssetName() { 				
 		return 'com_joaktree.application.'.(int) $this->app_id.'.tree.'.(int) $this->id;
 	}
 

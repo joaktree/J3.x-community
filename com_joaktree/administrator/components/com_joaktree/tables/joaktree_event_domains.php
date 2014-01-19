@@ -19,6 +19,7 @@ jimport('joomla.filter.input');
 class TableJoaktree_event_domains extends JTable
 {
 	var $id 			= null;
+	var $display_id		= null;
 	var $code			= null;
 	var $level 			= null;
 	var $value			= null;

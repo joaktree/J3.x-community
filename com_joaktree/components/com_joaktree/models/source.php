@@ -134,7 +134,7 @@ class JoaktreeModelSource extends JModelForm {
 		// Load the parameters.
 		$params	= JComponentHelper::getParams('com_joaktree');
 		if ($params->get('siteedit', 1)) {	
-			$canDo	= JoaktreeHelper::getActions(false);	
+			$canDo	= JoaktreeHelper::getActions('application');	
 		}
 		
 		if ( (is_object($canDo)) && 
@@ -228,7 +228,7 @@ class JoaktreeModelSource extends JModelForm {
 		// Load the parameters.
 		$params	= JComponentHelper::getParams('com_joaktree');
 		if ($params->get('siteedit', 1)) {	
-			$canDo	= JoaktreeHelper::getActions(false);	
+			$canDo	= JoaktreeHelper::getActions('application');	
 		}
 		
 		if ( (is_object($canDo)) && ($canDo->get('core.delete')) ) {

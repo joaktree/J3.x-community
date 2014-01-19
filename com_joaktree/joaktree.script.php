@@ -47,15 +47,15 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_admin_persons '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', id               varchar(20)           NOT NULL '
-			   .', default_tree_id  int(11)      default  NULL '
-			   .', published        tinyint(1)            NOT NULL '
-			   .', access           int(11)      unsigned NOT NULL '
-			   .', living           tinyint(1)            NOT NULL '
-			   .', page             tinyint(1)            NOT NULL '
-			   .', robots           tinyint(2)            NOT NULL default 0 ' 
-			   .', map              tinyint(1)            NOT NULL default 0 ' 
+			   .', default_tree_id  int(11)      unsigned     NULL '
+			   .', published        tinyint(1)   unsigned NOT NULL '
+			   .', access           tinyint(1)   unsigned NOT NULL '
+			   .', living           tinyint(1)   unsigned NOT NULL '
+			   .', page             tinyint(1)   unsigned NOT NULL '
+			   .', robots           tinyint(1)   unsigned NOT NULL default 0 ' 
+			   .', map              tinyint(1)   unsigned NOT NULL default 0 ' 
 			   .', PRIMARY KEY  (app_id, id) '
 			   .') '
 			   .'COMMENT="'.$version.'" ';
@@ -65,8 +65,8 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_applications '
-			   .'( id               tinyint(4)  unsigned  NOT NULL auto_increment '
-			   .', asset_id         int(10)      unsigned NOT NULL '
+			   .'( id               int(11)      unsigned NOT NULL auto_increment '
+			   .', asset_id         int(11)      unsigned NOT NULL '
 			   .', title            varchar(30)           NOT NULL '
 			   .', description      varchar(100)          NOT NULL '
 			   .', programName      varchar(30)           NOT NULL '
@@ -89,13 +89,13 @@ class com_joaktreeInstallerScript
 			                          .', ' . $db->Quote( 'relationEvent' )
 			                          .', ' . $db->Quote( 'relationNote' )
 						  .')                 NOT NULL '
-			   .', objectOrderNumber smallint(2)          NOT NULL default 0 '
-			   .', app_id           tinyint(4)            NOT NULL '
+			   .', objectOrderNumber tinyint(3)  unsigned NOT NULL default 0 '
+			   .', app_id           int(11)      unsigned NOT NULL '
 			   .', person_id_1      varchar(20)           NOT NULL '
 			   .', person_id_2      varchar(20)           NOT NULL default '. $db->Quote( 'EMPTY' ).' '
 			   .', source_id        varchar(20)           NOT NULL '
-			   .', orderNumber      smallint(2)           NOT NULL '
-			   .', dataQuality      tinyint(2)                NULL '
+			   .', orderNumber      tinyint(3)   unsigned NOT NULL '
+			   .', dataQuality      tinyint(3)   unsigned     NULL '
 			   .', page             varchar(250)  default     NULL '
 			   .', quotation        varchar(250)  default     NULL '
 			   .', note             varchar(250)  default     NULL '
@@ -109,17 +109,19 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_display_settings '
-			   .'( id               int(11)      unsigned NOT NULL auto_increment '
+			   .'( id               tinyint(3)   unsigned NOT NULL auto_increment '
 			   .', code             varchar(4)            NOT NULL '
 			   .', level            enum( ' . $db->Quote( 'person' )
 			                          .', ' . $db->Quote( 'name' )
 			                          .', ' . $db->Quote( 'relation' )
 						  .')                 NOT NULL '
-			   .', ordering         tinyint(3)            NOT NULL '
+			   .', ordering         tinyint(3)   unsigned NOT NULL '
 			   .', published        tinyint(1)   unsigned NOT NULL default 0 '
-			   .', access           tinyint(3)   unsigned NOT NULL default 0 '
-			   .', accessLiving     tinyint(3)   unsigned NOT NULL default 0 '
-			   .', altLiving        tinyint(3)            NOT NULL default 0 '
+			   .', access           tinyint(1)   unsigned NOT NULL default 0 '
+			   .', accessLiving     tinyint(1)   unsigned NOT NULL default 0 '
+			   .', altLiving        tinyint(1)   unsigned NOT NULL default 0 '
+			   .', domain           tinyint(1)   unsigned NOT NULL default 0 '
+			   .', secondary        tinyint(1)   unsigned NOT NULL default 0 '
 			   .', PRIMARY KEY  (id) '
 			   .', UNIQUE KEY UK_CODE_LEVEL (code, level) '
 			   .') '
@@ -193,7 +195,7 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_documents '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', id               varchar(20)           NOT NULL '
 			   .', file             varchar(200)          NOT NULL '
 			   .', fileformat       varchar(10)           NOT NULL '
@@ -212,8 +214,8 @@ class com_joaktreeInstallerScript
 			   .'#__joaktree_gedcom_objectlines '
 			   .'( id               int(11)      unsigned NOT NULL auto_increment '
 			   .', object_id        varchar(20)           NOT NULL '
-			   .', order_nr         int(11)               NOT NULL '
-			   .', level            int(11)               NOT NULL '
+			   .', order_nr         int(11)      unsigned NOT NULL '
+			   .', level            int(11)      unsigned NOT NULL '
 			   .', tag              varchar(20)           NOT NULL '
 			   .', value            text         default      NULL '
 			   .', subtype          enum( '   . $db->Quote( 'spouse' )
@@ -252,7 +254,7 @@ class com_joaktreeInstallerScript
 			   .', longitude        decimal(10,7)             NULL '
 			   .', indServerProcessed tinyint(1) unsigned NOT NULL default 0 '
 			   .', indDeleted       tinyint(1)   unsigned NOT NULL default 0 '
-			   .', results          tinyint(2)   unsigned     NULL '
+			   .', results          tinyint(3)   unsigned     NULL '
 			   .', resultValue      varchar(100)              NULL '
 			   .', PRIMARY KEY  (id) '
 			   .', KEY indexLoc (indexLoc) '
@@ -264,8 +266,8 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_logremovals '
-			   .'( id               int(10)      unsigned NOT NULL AUTO_INCREMENT '
-			   .', app_id           tinyint(4)   unsigned NOT NULL '
+			   .'( id               int(11)      unsigned NOT NULL AUTO_INCREMENT '
+			   .', app_id           int(11)      unsigned NOT NULL '
 			   .', object_id        varchar(20)           NOT NULL '
 			   .', object           enum( ' . $db->Quote( 'prsn' )
 			                          .', ' . $db->Quote( 'sour' )
@@ -284,8 +286,8 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_logs '
-			   .'( id               int(10)      unsigned NOT NULL AUTO_INCREMENT '
-			   .', app_id           tinyint(4)   unsigned NOT NULL '
+			   .'( id               int(11)      unsigned NOT NULL AUTO_INCREMENT '
+			   .', app_id           int(11)      unsigned NOT NULL '
 			   .', object_id        varchar(20)           NOT NULL '
 			   .', object           enum( ' . $db->Quote( 'prsn' )
 			                          .', ' . $db->Quote( 'sour' )
@@ -295,7 +297,7 @@ class com_joaktreeInstallerScript
 			                          .')                 NOT NULL '
 			   .', changeDateTime   datetime              NOT NULL '
 			   .', logevent         varchar(9)            NOT NULL '
-			   .', user_id          int(11)               NOT NULL '
+			   .', user_id          int(11)      unsigned NOT NULL '
 			   .', PRIMARY KEY  (id) '
 			   .', KEY objectIndex1 (app_id,object_id) '
 			   .') '
@@ -313,10 +315,10 @@ class com_joaktreeInstallerScript
 			   						  .', ' . $db->Quote( 'location' )
 			                          .')                 NOT NULL '
 			   .', service          varchar(20)           NOT NULL default '.$db->Quote( 'staticmap' ).' '
-			   .', app_id           tinyint(4)   unsigned NOT NULL '
+			   .', app_id           int(11)      unsigned NOT NULL '
 			   .', relations        tinyint(1)   unsigned NOT NULL default 0 '
 			   .', params           varchar(2048)         NOT NULL '
-			   .', tree_id          tinyint(4)   unsigned     NULL '
+			   .', tree_id          int(11)      unsigned     NULL '
 			   .', person_id        varchar(20)               NULL '
 			   .', subject          varchar(50)               NULL '
 			   .', period_start     int(11)      unsigned     NULL '
@@ -332,7 +334,7 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_notes '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', id               varchar(20)           NOT NULL '
 			   .', value            text                      NULL '
 			   .', PRIMARY KEY  (app_id,id) '
@@ -344,7 +346,7 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_persons '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', id               varchar(20)           NOT NULL '
 			   .', indexNam         varchar(1)            NOT NULL '
 			   .', firstName        varchar(50)           NOT NULL '
@@ -373,7 +375,7 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_person_documents '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', person_id        varchar(20)           NOT NULL '
 			   .', document_id      varchar(20)           NOT NULL '
 			   .', PRIMARY KEY  (app_id,person_id,document_id) '
@@ -385,15 +387,15 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_person_events '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', person_id        varchar(20)           NOT NULL '
-			   .', orderNumber      smallint(2)           NOT NULL '
+			   .', orderNumber      tinyint(3)   unsigned NOT NULL '
 			   .', code             varchar(4)            NOT NULL '
 			   .', indNote          tinyint(1)   unsigned NOT NULL default 0 '
 			   .', indCitation      tinyint(1)   unsigned NOT NULL default 0 '
 			   .', type             varchar(30)  default      NULL '
 			   .', eventDate        varchar(40)  default      NULL '
-			   .', loc_id           int(11)      default      NULL '
+			   .', loc_id           int(11)      unsigned     NULL '
 			   .', location         varchar(75)  default      NULL '
 			   .', value            varchar(100) default      NULL '
 			   .', PRIMARY KEY  (app_id,person_id,orderNumber) '
@@ -403,13 +405,26 @@ class com_joaktreeInstallerScript
 			   .'COMMENT="'.$version.'" ';
 			// end: joaktree_person_events
 			   
+			// Table joaktree_person_links
+			$update_queries[] = 
+			    'CREATE TABLE IF NOT EXISTS '
+			   .'#__joaktree_person_links '
+			   .'( app_id           int(11)      unsigned NOT NULL '
+			   .', person_id        varchar(20)           NOT NULL '
+			   .', app_id_c         int(11)      unsigned NOT NULL '
+			   .', person_id_c      varchar(20)           NOT NULL '
+			   .', PRIMARY KEY  (app_id,person_id,app_id_c,person_id_c) '
+			   .') '
+			   .'COMMENT="'.$version.'" ';   
+			// end: joaktree_person_links
+			   			   
 			// Table joaktree_person_names
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_person_names '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', person_id        varchar(20)           NOT NULL '
-			   .', orderNumber      smallint(2)           NOT NULL '
+			   .', orderNumber      tinyint(3)   unsigned NOT NULL '
 			   .', code             varchar(4)            NOT NULL '
 			   .', indNote          tinyint(1)   unsigned NOT NULL default 0 '
 			   .', indCitation      tinyint(1)   unsigned NOT NULL default 0 '
@@ -424,12 +439,12 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_person_notes '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', person_id        varchar(20)           NOT NULL '
-			   .', orderNumber      smallint(2)           NOT NULL '
+			   .', orderNumber      tinyint(3)   unsigned NOT NULL '
 			   .', indCitation      tinyint(1)   unsigned NOT NULL default 0 '
-			   .', nameOrderNumber  smallint(2)  default      NULL '
-			   .', eventOrderNumber smallint(2)  default      NULL '
+			   .', nameOrderNumber  tinyint(3)   unsigned     NULL '
+			   .', eventOrderNumber tinyint(3)   unsigned     NULL '
 			   .', note_id          varchar(20)               NULL '
 			   .', value            text '
 			   .', PRIMARY KEY  (app_id,person_id,orderNumber) '
@@ -458,7 +473,7 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_relations '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', person_id_1      varchar(20)           NOT NULL '
 			   .', person_id_2      varchar(20)           NOT NULL '
 			   .', type             enum( '   . $db->Quote( 'partner' )
@@ -476,8 +491,8 @@ class com_joaktreeInstallerScript
 			   .', family_id        varchar(20)           NOT NULL '
 			   .', indNote          tinyint(1)   unsigned NOT NULL default 0 '
 			   .', indCitation      tinyint(1)   unsigned NOT NULL default 0 '
-			   .', orderNumber_1    smallint(2)  default      NULL '
-			   .', orderNumber_2    smallint(2)  default      NULL '
+			   .', orderNumber_1    tinyint(3)   unsigned     NULL '
+			   .', orderNumber_2    tinyint(3)   unsigned     NULL '
 			   .', PRIMARY KEY  (app_id,person_id_1,person_id_2) '
 			   .', KEY person_id (app_id,person_id_1) '
 			   .', KEY to_person_id (app_id,person_id_2) '
@@ -489,16 +504,16 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_relation_events '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', person_id_1      varchar(20)           NOT NULL '
 			   .', person_id_2      varchar(20)           NOT NULL '
-			   .', orderNumber      smallint(2)           NOT NULL '
+			   .', orderNumber      tinyint(3)   unsigned NOT NULL '
 			   .', code             varchar(4)            NOT NULL '
 			   .', indNote          tinyint(1)   unsigned NOT NULL default 0 '
 			   .', indCitation      tinyint(1)   unsigned NOT NULL default 0 '
 			   .', type             varchar(30)  default      NULL '
 			   .', eventDate        varchar(40)  default      NULL '
-			   .', loc_id           int(11)      default      NULL '
+			   .', loc_id           int(11)      unsigned     NULL '
 			   .', location         varchar(75)  default      NULL '
 			   .', value            varchar(100) default      NULL '
 			   .', PRIMARY KEY  (app_id,person_id_1,person_id_2,orderNumber) '
@@ -512,12 +527,12 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_relation_notes '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', person_id_1      varchar(20)           NOT NULL '
 			   .', person_id_2      varchar(20)           NOT NULL '
-			   .', orderNumber      smallint(2)           NOT NULL '
+			   .', orderNumber      tinyint(3)   unsigned NOT NULL '
 			   .', indCitation      tinyint(1)   unsigned NOT NULL default 0 '
-			   .', eventOrderNumber smallint(2)  default      NULL '
+			   .', eventOrderNumber tinyint(3)   unsigned     NULL '
 			   .', note_id          varchar(20)               NULL '
 			   .', value            text '
 			   .', PRIMARY KEY  (app_id,person_id_1,person_id_2,orderNumber) '
@@ -529,7 +544,7 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_repositories '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', id               varchar(20)           NOT NULL '
 			   .', name             varchar(50)           NOT NULL '
 			   .', website          varchar(100) default  NULL '
@@ -542,7 +557,7 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_sources '
-			   .'( app_id           tinyint(4)            NOT NULL '
+			   .'( app_id           int(11)      unsigned NOT NULL '
 			   .', id               varchar(20)           NOT NULL '
 			   .', repo_id          varchar(20)  default  NULL '
 			   .', title            varchar(250) default  NULL '
@@ -558,7 +573,7 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_themes '
-			   .'( id               smallint(6)  unsigned NOT NULL auto_increment '
+			   .'( id               tinyint(3)   unsigned NOT NULL auto_increment '
 			   .', name             varchar(25)  default  NULL '
 			   .', home             tinyint(1)   unsigned NOT NULL default 0 '
 			   .', params           varchar(2048)         NOT NULL '
@@ -600,22 +615,22 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_trees '
-			   .'( id               int(10)      unsigned NOT NULL auto_increment '
-			   .', app_id           tinyint(4)            NOT NULL '
-			   .', asset_id         int(10)      unsigned NOT NULL '
+			   .'( id               int(11)      unsigned NOT NULL auto_increment '
+			   .', app_id           int(11)      unsigned NOT NULL '
+			   .', asset_id         int(11)      unsigned NOT NULL '
 			   .', holds            enum( \'all\' '
 			   .'                       , \'descendants\' '
 			   .'                       )                 NOT NULL default \'all\' '
-			   .', published        tinyint(1)            NOT NULL default 1 '
+			   .', published        tinyint(1)   unsigned NOT NULL default 1 '
 			   .', access           int(11)      unsigned NOT NULL default 1 '
 			   .', name             varchar(250)          NOT NULL '
-			   .', theme_id         int(11)               NOT NULL '
+			   .', theme_id         tinyint(3)   unsigned NOT NULL '
 			   .', indGendex        tinyint(1)   unsigned NOT NULL default 0 '
 			   .', indPersonCount   tinyint(1)   unsigned NOT NULL default 0 '
 			   .', indMarriageCount tinyint(1)   unsigned NOT NULL default 0 '
-			   .', robots           tinyint(2)            NOT NULL default 0 ' 
+			   .', robots           tinyint(1)   unsigned NOT NULL default 0 ' 
 			   .', root_person_id   varchar(20)               NULL '
-			   .', catid            int(11)                   NULL '
+			   .', catid            int(11)      unsigned     NULL '
 			   .', PRIMARY KEY  (id) '
 			   .') '
 			   .'COMMENT="'.$version.'" ';
@@ -626,8 +641,8 @@ class com_joaktreeInstallerScript
 			    'CREATE TABLE IF NOT EXISTS '
 			   .'#__joaktree_tree_persons '
 			   .'( id               varchar(31)           NOT NULL '
-			   .', app_id           tinyint(4)            NOT NULL '
-			   .', tree_id          int(11)               NOT NULL '
+			   .', app_id           int(11)      unsigned NOT NULL '
+			   .', tree_id          int(11)      unsigned NOT NULL '
 			   .', person_id        varchar(20)           NOT NULL '
 			   .', type             enum( ' . $db->Quote( 'R' )
 			                          	.', ' . $db->Quote( 'P' )
@@ -640,6 +655,20 @@ class com_joaktreeInstallerScript
 			   .'COMMENT="'.$version.'" ';
 			// end: joaktree_tree_persons
         	
+			// Table joaktree_users
+			$update_queries[] = 
+			    'CREATE TABLE IF NOT EXISTS '
+			   .'#__joaktree_users '
+			   .'( user_id          int(11)      unsigned NOT NULL '
+			   .', app_id           int(11)      unsigned NOT NULL '
+			   .', tree_id          int(11)      unsigned NOT NULL '
+			   .', usergroup1_id    int(11)      unsigned NOT NULL '
+			   .', params           varchar(2048)         NOT NULL '
+			   .', PRIMARY KEY  (user_id) '
+			   .') '
+			   .'COMMENT="'.$version.'" ';
+			// end: joaktree_users
+			   
 			// Perform all queries
 			foreach( $update_queries as $query ) {
 			    $db->setQuery( $query );
@@ -754,7 +783,8 @@ class com_joaktreeInstallerScript
 			$update_queries[] = 'DROP TABLE IF EXISTS #__joaktree_repositories ';
 			$update_queries[] = 'DROP TABLE IF EXISTS #__joaktree_sources ';
 			$update_queries[] = 'DROP TABLE IF EXISTS #__joaktree_tree_persons ';
-
+			$update_queries[] = 'DROP TABLE IF EXISTS #__joaktree_users ';
+			
 			// Perform all queries - we don't care if it fails
 			foreach( $update_queries as $query ) {
 			    $db->setQuery( $query );

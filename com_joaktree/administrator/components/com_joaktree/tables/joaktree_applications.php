@@ -23,6 +23,7 @@ class TableJoaktree_applications extends JTable
 	var $title						= null;
 	var $description				= null;
 	var $programName				= null;
+	var $community					= null;
 	var $params						= null;
 	
 	function __construct( &$db) {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE form>
+<form>
+	<fieldset name="details">	
+		<field 
+			name="id" 
+			type="hidden"
+			filter="unset"
+		/>
+
+		<field 
+			name="display_id" 
+			type="hidden"
+			filter="unset"
+		/>
+
+		<field 
+			name="code" 
+			type="text" 
+			required="true"
+			readonly="true" 
+			class="readonly"
+			label="JTSETTINGS_HEADING_FIELD" 	
+			description ="JTSETTINGS_HEADING_FIELD" 
+		/>
+		
+		<field 
+			name="level" 
+			type="hidden"
+			filter="unset"
+		/>
+		
+		<field 
+			name="value" 
+			type="text" 
+			required="true"
+			label="JTSETTINGS_DOMAINVALUE" 	
+			description ="JTSETTINGS_DOMAINVALUE" 
+		/>
+		
+	</fieldset>
+</form>
